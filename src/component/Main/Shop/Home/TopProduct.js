@@ -1,38 +1,64 @@
 import React, { Component } from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput, Button } from 'react-native'
 import sp1 from '../../../../public/temp/sp1.jpeg'
 import { addCart, getProduct } from '../../../api/userServices'
 import getToken from "../../../../global/getToken";
+import global from "../../../../global/global";
+import axios from "axios";
 
 export default class TopProduct extends Component {
 
     constructor(props) {
         super(props)
         this.state = {
-            arr: []
+            arr: [], quantity: 0
         }
+        global.setArrCart = () => { }; //Khai báo cho có
+        global.setArrSearch = (arrSearch) => this.setState({
+            arr: arrSearch
+        }, console.log('No chay vo constructor'))
+        // global.id_product = () => { }
     }
 
     async componentDidMount() {
+        console.log('Tét compodidmout');
         let response = await getProduct()
         this.setState({
-            arr: response.dataProduct
+            arr: response.listProduct
         })
         console.log('Danh sach san pham', response);
     }
 
-    handleAddGioHang = async () => {
-        let token = await getToken()
-        console.log('Token: ', token);
-        //let response = await handleGetAllUser('ALL');
-        //let response = await handleGetAllUserShop()
-        let response = await addCart(token, 1, 2)
-        console.log(response);
+    handleAddGioHang = async (id_product) => {
+        try {
+
+
+            let token = await getToken()
+            console.log('Token: ', token);
+            //let response = await handleGetAllUser('ALL');
+            //let response = await handleGetAllUserShop()
+            let response = await addCart(token, id_product, 1)
+            let cart = await axios.post('http://192.168.225.135:8081/api/v1/account');
+            global.setArrCart(cart.data.list);
+            global.setTabBarBadge(cart.data.list.length);
+
+        }
+        catch (e) {
+            console.log(e);
+        }
     }
 
+    diDenProductDetail = (id_product) => {
+        console.log('Detail product:', id_product);
+        global.id_product(id_product)
+        this.props.navigation.push('DETAIL_PRODUCT');
+
+
+    }
     render() {
         const { container, titleContainer, body, productContainer } = styles
         let arrProduct = this.state.arr
+        console.log('Xem thử:', arrProduct);
         return (
             <View style={container}>
                 <View style={titleContainer}>
@@ -43,37 +69,27 @@ export default class TopProduct extends Component {
 
                         arrProduct && arrProduct.map((item, index) => {
                             return (
-                                // <tr key={index}>
-
-                                //     <td><img src={item.image} alt="" height={50} width={50} /></td>
-
-                                //     <td>{item.name}</td>
-                                //     <td>{item.phone}</td>
-                                //     <td>{item.email}</td>
-                                //     <td>{item.address}</td>
-
-                                //     <td>
-                                //         <button className='btn-edit'><i className="fas fa-pencil-alt"></i> </button>
-                                //         <button className='btn-delete'><i className="fas fa-trash"></i></button>
-                                //     </td>
-
-                                // </tr>
-                                //  <View style={body}>
                                 <View style={productContainer}>
-                                    <Image source={sp1} style={{ height: 200, width: 147 }}></Image>
+                                    {/* this.props.navigation.push */}
+                                    <TouchableOpacity onPress={() => this.diDenProductDetail(item.id_product)}><Image source={{ uri: `http://192.168.225.135:8081${item.images}` }} style={{ height: 130, width: 147 }}></Image></TouchableOpacity>
                                     <Text>{item.name}</Text>
-                                    <Text>{item.price}</Text>
+                                    <Text>{item.price}nghìn đồng</Text>
                                     <Text>{item.detail}</Text>
-                                    <TouchableOpacity onPress={() => this.handleAddGioHang()}>
+                                    {/* <Button title="-" ></Button> */}
+                                    <TextInput value={this.state.quantity} onChangeText={text => this.setState({ quantity: text })} />
+                                    {/* <Button title="+" onPress={text => this.setState({ quantity: this.state.quantity + 1 })}></Button> */}
+                                    <TouchableOpacity onPress={() => this.handleAddGioHang(item.id_product)}>
                                         <Text>Buy</Text></TouchableOpacity>
                                 </View>
                             )
                         })
-                    }</View>
-                <View style={body}>
+                    }
+                </View>
+                {/* <View style={body}>
                     <View style={productContainer}>
-                        <Image source={sp1} style={{ height: 200, width: 147 }}></Image>
+                        <Image source={{ uri: 'http://192.168.225.135:8081/image/image-1676180053712.jpg' }} style={{ height: 200, width: 147 }}></Image>
                         <Text>Product name</Text>
+
                         <TouchableOpacity onPress={() => this.handleAddGioHang()}>
                             <Text>Buy</Text></TouchableOpacity>
                     </View>
@@ -92,7 +108,7 @@ export default class TopProduct extends Component {
                         <Text>Product name</Text>
                         <Text>200$</Text>
                     </View>
-                </View>
+                </View>*/}
 
             </View>
         )

@@ -8,17 +8,10 @@ import OderHistory from './src/component/OrderHistory/OrderHistory'
 import ChangeInfo from './src/component/ChangeInfo/ChangeInfo'
 import { NavigationContainer } from '@react-navigation/native';
 import OrderHistory from './src/component/OrderHistory/OrderHistory';
-
+import DetailProduct from './src/component/DetailProduct/DetailProduct';
 const Stack = createNativeStackNavigator();
 StatusBar.setHidden(true)
 export default class App extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-    }
-
-  }
-
   render() {
     return (
       <NavigationContainer>
@@ -29,6 +22,7 @@ export default class App extends Component {
           <Stack.Screen name="CHANGE_INFO" component={ChangeInfo} />
           <Stack.Screen name="ORDER_HISTORY" component={OrderHistory} />
           <Stack.Screen name="AUTHENTICATION" component={Authentication} />
+          <Stack.Screen name="DETAIL_PRODUCT" component={DetailProduct} />
         </Stack.Navigator>
       </NavigationContainer>
     );

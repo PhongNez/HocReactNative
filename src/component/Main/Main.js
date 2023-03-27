@@ -8,17 +8,13 @@ import getToken from '../../global/getToken'
 import { checkToken } from '../api/userServices'
 export default class Main extends Component {
     constructor(props) {
-        super(props)
+        super(props);
     }
 
     async componentDidMount() {
-        console.log('Phong');
+        console.log('Props component:', this.props);
         let token = await getToken()
-        // let token = await AsyncStorage.getItem('@token')
-        // let value = JSON.parse(token)
         console.log('token Phong va value: ', token);
-
-        // let token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF9hY2NvdW50IjoxLCJlbWFpbCI6ImFkbWluLmZvb2RvcmRlckBnbWFpbC5jb20iLCJwaG9uZSI6IjAzMjEiLCJuYW1lIjoiS2ltIMSQ4bqhaSBQaG9uZyIsImNyZWF0ZWRfdGltZSI6IjIwMjItMDktMjFUMDU6MTI6MjYuMDAwWiIsImFkZHJlc3MiOiI1MiIsImF2YXRhciI6IicnIiwic3RhdHVzIjowLCJyb2xlIjoxLCJpYXQiOjE2NzY1MzE0MzV9.Ngwuj6tqRhjZngTiHdgi5HWyHAyyd5_thccp28m-slg'
         let res = await checkToken(token)
         console.log('File MAin', res);
         global.onSignIn(res)
@@ -33,6 +29,7 @@ export default class Main extends Component {
 
     render() {
         let { navigation } = this.props
+
         return (
             <Drawer
                 ref={(ref) => this.drawer = ref}
@@ -40,7 +37,11 @@ export default class Main extends Component {
                 openDrawerOffset={0.5}//mở menu 0.4 màn hình
                 tapToClose={true}//bấm để ẩn menu
             >
-                <Shop open={this.openControlPanel} />
+                {/* Home
+                Cart
+                Search
+                Contact */}
+                <Shop open={this.openControlPanel} navigation={navigation} />
             </Drawer>
         );
     }

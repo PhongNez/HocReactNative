@@ -14,11 +14,14 @@ export default class SignIn extends Component {
     }
 
     onSignIn = async () => {
+        console.log('Thử');
         const { email, password } = this.state;
         let data = await userServices.signIn(email, password)
+        console.log(data);
         console.log('data:', data.userData);
-        saveToken(data.userData)
+        await saveToken(data.userData)
         global.onSignIn(data)
+        console.log(data);
         this.props.diDenMain()
 
     }

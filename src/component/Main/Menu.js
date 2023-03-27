@@ -3,6 +3,8 @@ import { StyleSheet, Text, TouchableOpacity, View, Image, AsyncStorage } from 'r
 import Imageprofile from '../../public/temp/profile.png'
 import global from '../../global/global'
 import getToken from '../../global/getToken'
+import { CommonActions } from '@react-navigation/native';
+
 
 export default class Menu extends Component {
     constructor(props) {
@@ -11,9 +13,10 @@ export default class Menu extends Component {
             user: null
         }
         global.onSignIn = (user) => {
-            console.log('Text global Phong:', user);
+            console.log('Bên Menu');
             this.onSignIn(user)
         }
+
     }
 
     onSignIn(user) {
@@ -27,6 +30,18 @@ export default class Menu extends Component {
         console.log('token1:', token);
         console.log('token2:', token1);
         this.setState({ user: null })
+        this.props.navigation.dispatch(
+            CommonActions.reset({
+                index: 1,
+                routes: [
+                    { name: 'MAIN' },
+                    // {
+                    //   name: 'Profile',
+                    //   params: { user: 'jane' },
+                    // },
+                ],
+            })
+        );
     }
 
     gotoChangeInfo = () => {
@@ -50,7 +65,7 @@ export default class Menu extends Component {
             <View style={{ flex: 1 }}>
                 <TouchableOpacity onPress={() => this.gotoAuthentication()}>
                     <Text style={{ btnStyle }}>
-                        Sign In
+                        Đăng nhập khách hàng
                     </Text>
                 </TouchableOpacity>
             </View>
@@ -82,10 +97,13 @@ export default class Menu extends Component {
         )
         const mainJSX = this.state.user ? loginJSX : logoutJSX
         // const mainJSX = logoutJSX
-        console.log('State user: ', this.state.user);
+        console.log('State user của Menu: ', this.state.user);
+        let image = user && user.userInfo && user.userInfo.avatar
         return (
             <View style={container}>
-                <Image source={Imageprofile} style={profile} />
+                <Image source={{ uri: `http://192.168.225.135:8081/image/${image}` }} style={profile} />
+
+
                 {mainJSX}
             </View>
 
@@ -104,7 +122,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         justifyContent: 'center',
         borderRadius: 5,
-        paddingHorizontal: 70
+        paddingHorizontal: 70,
+        fontSize: 20
     },
     btnText: {
         color: '#34B089',

@@ -1,4 +1,8 @@
 module.exports = {
-    onSignIn: null
+    onSignIn: null,
+    setArrSearch: null,
+    setArrCart: null,
+    setTabBarBadge: null,
+    id_product: null
 }
 

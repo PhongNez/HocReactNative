@@ -8,13 +8,15 @@ export default class OrderHistory extends Component {
         }
 
     }
+
     quayLai = () => {
         this.props.navigation.goBack()
     }
+
     render() {
         return (
             <View style={{ backgroundColor: 'yellow', flex: 1 }}>
-                <Text>Hello from OrderHistory</Text>
+                <Text>Hello Tân OrderHistory</Text>
                 <TouchableOpacity
                     onPress={() => this.quayLai()}>
                     <Text>Go to back</Text>

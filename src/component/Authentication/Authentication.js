@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, TextInput, Button } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, TextInput, Button, AsyncStorage } from 'react-native';
 import SignIn from './SignIn';
 import SignUp from './SignUp';
 
@@ -11,8 +11,10 @@ export default class Authentication extends Component {
         }
 
     }
-    quayLai = () => {
+    quayLai = async () => {
+        await AsyncStorage.removeItem('@token')
         this.props.navigation.goBack()
+
     }
 
     diDenMain = () => {

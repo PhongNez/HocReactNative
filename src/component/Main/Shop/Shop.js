@@ -8,19 +8,33 @@ import Cart from "./Cart/Cart";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Header from "./Header";
+import global from "../../../global/global";
 
 const Tab = createBottomTabNavigator();
 const windowHeight = Dimensions.get('window').height;
 export default class Shop extends Component {
     constructor(props) {
         super(props);
-    }
+        this.state = {
+            user: null,
+            setTabBarBadge: 0
+        }
 
+        global.setTabBarBadge = (setTabBarBadge) => this.setState({
+            setTabBarBadge
+        }, console.log('setTabBarBadge global', setTabBarBadge))
+    }
+    componentDidMount() {
+
+    }
     onpenMenu = () => {
         this.props.open()
     }
 
     render() {
+        console.log('Shop');
+        console.log('setTabBarBadge render', this.state.setTabBarBadge)
+        const setTabBarBadge = this.state.setTabBarBadge === 0 ? null : this.state.setTabBarBadge
         return (
             <View style={{ flex: 1 }}>
                 {/* <View style={{ height: windowHeight / 7, paddingTop: 4 }}>
@@ -82,7 +96,7 @@ export default class Shop extends Component {
 
                 >
                     <Tab.Screen name="Home" component={Home} />
-                    <Tab.Screen name="Cart" component={Cart} />
+                    <Tab.Screen name="Cart" component={Cart} options={{ tabBarBadge: setTabBarBadge }} />
                     <Tab.Screen name="Search" component={Search} />
                     <Tab.Screen name="Contact" component={Contact} />
                 </Tab.Navigator>
