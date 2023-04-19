@@ -86,10 +86,10 @@ export default class SignUp extends Component {
         fd.append('name', name)
 
         console.log(fd);
-        // let response = await axios.post('http://192.168.225.135:8081/api/v1/admin/createcategory', fd)
+        // let response = await axios.post('http://192.168.1.12:8081/api/v1/admin/createcategory', fd)
 
         // let response = await axios({
-        //     url: "http://192.168.225.135:8081/api/v1/admin/createcategory",
+        //     url: "http://192.168.1.12:8081/api/v1/admin/createcategory",
         //     method: 'POST',
         //     data: fd,
         //     headers: {
@@ -100,7 +100,7 @@ export default class SignUp extends Component {
         // })
 
         let response = await axios({
-            url: "http://192.168.225.135:8081/api/v1/account/signup",
+            url: "http://192.168.1.12:8081/api/v1/account/signup",
             method: 'POST',
             data: fd,
             headers: {
@@ -145,7 +145,7 @@ export default class SignUp extends Component {
                 <Button title="Chọn ảnh từ thư viện" onPress={() => this.pickImage()} />
                 {setImage && <Image source={{ uri: setImage }} style={{ width: 200, height: 200 }} />}
                 {/* </View> */}
-                {/* <Image source={{ uri: `http://192.168.225.135:8081/image/logo-1677728192587.jpg` }} style={{ width: 200, height: 200 }} /> */}
+                {/* <Image source={{ uri: `http://192.168.1.12:8081/image/logo-1677728192587.jpg` }} style={{ width: 200, height: 200 }} /> */}
                 <TouchableOpacity style={{ height: 50, width: 150, backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center' }}
                     onPress={() => this.upload()}
                 >

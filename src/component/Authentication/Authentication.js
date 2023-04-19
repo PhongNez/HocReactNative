@@ -18,7 +18,7 @@ export default class Authentication extends Component {
     }
 
     diDenMain = () => {
-        this.props.navigation.push('MAIN')
+        this.props.navigation.popToTop()
     }
 
     signIn = () => {

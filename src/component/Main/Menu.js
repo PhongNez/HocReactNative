@@ -101,7 +101,7 @@ export default class Menu extends Component {
         let image = user && user.userInfo && user.userInfo.avatar
         return (
             <View style={container}>
-                <Image source={{ uri: `http://192.168.225.135:8081/image/${image}` }} style={profile} />
+                <Image source={{ uri: `http://192.168.1.12:8081/image/${image}` }} style={profile} />
 
 
                 {mainJSX}

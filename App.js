@@ -9,22 +9,32 @@ import ChangeInfo from './src/component/ChangeInfo/ChangeInfo'
 import { NavigationContainer } from '@react-navigation/native';
 import OrderHistory from './src/component/OrderHistory/OrderHistory';
 import DetailProduct from './src/component/DetailProduct/DetailProduct';
+
+import { Provider } from 'react-redux'
+import { createStore } from 'redux'
+
+import rootReducer from './src/store/rootReducer';
+const reduxStore = createStore(
+  rootReducer
+);
 const Stack = createNativeStackNavigator();
 StatusBar.setHidden(true)
 export default class App extends Component {
   render() {
     return (
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName="MAIN" screenOptions={{
-          headerShown: false
-        }}>
-          <Stack.Screen name="MAIN" component={Main} />
-          <Stack.Screen name="CHANGE_INFO" component={ChangeInfo} />
-          <Stack.Screen name="ORDER_HISTORY" component={OrderHistory} />
-          <Stack.Screen name="AUTHENTICATION" component={Authentication} />
-          <Stack.Screen name="DETAIL_PRODUCT" component={DetailProduct} />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <Provider store={reduxStore}>
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="MAIN" screenOptions={{
+            headerShown: false
+          }}>
+            <Stack.Screen name="MAIN" component={Main} />
+            <Stack.Screen name="CHANGE_INFO" component={ChangeInfo} />
+            <Stack.Screen name="ORDER_HISTORY" component={OrderHistory} />
+            <Stack.Screen name="AUTHENTICATION" component={Authentication} />
+            <Stack.Screen name="DETAIL_PRODUCT" component={DetailProduct} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </Provider>
     );
   }
 
