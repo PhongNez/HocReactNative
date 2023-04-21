@@ -1,105 +1,128 @@
 import React, { Component } from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput, Button } from 'react-native'
-import sp1 from '../../../../public/temp/sp1.jpeg'
-import { addCart, getProduct } from '../../../api/userServices'
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  TextInput,
+  Button,
+} from "react-native";
+import sp1 from "../../../../public/temp/sp1.jpeg";
+import { addCart, getProduct } from "../../../api/userServices";
 import getToken from "../../../../global/getToken";
 import global from "../../../../global/global";
 import axios from "axios";
 import { connect } from "react-redux";
 
 class TopProduct extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      arr: [],
+      quantity: 0,
+      size: 360,
+    };
+    global.setArrCart = () => {}; //Khai báo cho có
+    global.setArrSearch = (arrSearch) =>
+      this.setState(
+        {
+          arr: arrSearch,
+        },
+        console.log("No chay vo constructor")
+      );
+    // global.id_product = () => { }
+  }
 
-    constructor(props) {
-        super(props)
-        this.state = {
-            arr: [], quantity: 0, size: 360
-        }
-        global.setArrCart = () => { }; //Khai báo cho có
-        global.setArrSearch = (arrSearch) => this.setState({
-            arr: arrSearch
-        }, console.log('No chay vo constructor'))
-        // global.id_product = () => { }
+  async componentDidMount() {
+    console.log("Tét compodidmout");
+    let response = await getProduct();
+    this.setState({
+      arr: response.listProduct,
+    });
+    console.log("Danh sach san pham", response);
+  }
+
+  handleAddGioHang = async (id_product) => {
+    try {
+      let token = await getToken();
+      console.log("Token: ", token);
+      //let response = await handleGetAllUser('ALL');
+      //let response = await handleGetAllUserShop()
+      let response = await addCart(token, id_product, 1, this.state.size);
+      let cart = await axios.post("http://192.168.103.6:8081/api/v1/account");
+      global.setArrCart(cart.data.list);
+      global.setTabBarBadge(cart.data.list.length);
+    } catch (e) {
+      console.log(e);
     }
+  };
 
-    async componentDidMount() {
-        console.log('Tét compodidmout');
-        let response = await getProduct()
-        this.setState({
-            arr: response.listProduct
-        })
-        console.log('Danh sach san pham', response);
-    }
+  diDenProductDetail = (id_product) => {
+    console.log("Detail product:", id_product);
+    // global.id_product(id_product)
+    this.props.product(id_product);
+    this.props.navigation.push("DETAIL_PRODUCT");
+  };
 
-    handleAddGioHang = async (id_product) => {
-        try {
-
-
-            let token = await getToken()
-            console.log('Token: ', token);
-            //let response = await handleGetAllUser('ALL');
-            //let response = await handleGetAllUserShop()
-            let response = await addCart(token, id_product, 1, this.state.size)
-            let cart = await axios.post('http://192.168.1.12:8081/api/v1/account');
-            global.setArrCart(cart.data.list);
-            global.setTabBarBadge(cart.data.list.length);
-
-        }
-        catch (e) {
-            console.log(e);
-        }
-    }
-
-    diDenProductDetail = (id_product) => {
-        console.log('Detail product:', id_product);
-        // global.id_product(id_product)
-        this.props.product(id_product)
-        this.props.navigation.push('DETAIL_PRODUCT');
-
-
-    }
-
-    handleSize = (size) => {
-        console.log("Hello size: ", size);
-        this.setState({
-            size: size
-        })
-    }
-    render() {
-        const { container, titleContainer, body, productContainer } = styles
-        let arrProduct = this.state.arr
-        // console.log('Xem thử:', arrProduct);
-        return (
-            <View style={container}>
-                <View style={titleContainer}>
-                    <Text>TOP PRODUCT</Text>
+  handleSize = (size) => {
+    console.log("Hello size: ", size);
+    this.setState({
+      size: size,
+    });
+  };
+  render() {
+    const { container, titleContainer, body, productContainer } = styles;
+    let arrProduct = this.state.arr;
+    // console.log('Xem thử:', arrProduct);
+    return (
+      <View style={container}>
+        <View style={titleContainer}>
+          <Text>TOP PRODUCT</Text>
+        </View>
+        <View style={body}>
+          {arrProduct &&
+            arrProduct.map((item, index) => {
+              return (
+                <View style={productContainer}>
+                  {/* this.props.navigation.push */}
+                  <TouchableOpacity
+                    onPress={() => this.diDenProductDetail(item.id_product)}
+                  >
+                    <Image
+                      source={{
+                        uri: `http://192.168.103.6:8081${item.images}`,
+                      }}
+                      style={{ height: 130, width: 147 }}
+                    ></Image>
+                  </TouchableOpacity>
+                  <Text>{item.name}</Text>
+                  <Text>{item.price}nghìn đồng</Text>
+                  <Text>{item.detail}</Text>
+                  {/* <Button title="-" ></Button> */}
+                  {/* <TextInput value={this.state.quantity} onChangeText={text => this.setState({ quantity: text })} /> */}
+                  {/* <Button title="+" onPress={text => this.setState({ quantity: this.state.quantity + 1 })}></Button> */}
+                  <TouchableOpacity onPress={() => this.handleSize(360)}>
+                    <Text>S</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => this.handleSize(500)}>
+                    <Text>M</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => this.handleSize(700)}>
+                    <Text>L</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => this.handleAddGioHang(item.id_product)}
+                  >
+                    <Text>Buy</Text>
+                  </TouchableOpacity>
                 </View>
-                <View style={body}>
-                    {
-
-                        arrProduct && arrProduct.map((item, index) => {
-                            return (
-                                <View style={productContainer}>
-                                    {/* this.props.navigation.push */}
-                                    <TouchableOpacity onPress={() => this.diDenProductDetail(item.id_product)}><Image source={{ uri: `http://192.168.1.12:8081${item.images}` }} style={{ height: 130, width: 147 }}></Image></TouchableOpacity>
-                                    <Text>{item.name}</Text>
-                                    <Text>{item.price}nghìn đồng</Text>
-                                    <Text>{item.detail}</Text>
-                                    {/* <Button title="-" ></Button> */}
-                                    {/* <TextInput value={this.state.quantity} onChangeText={text => this.setState({ quantity: text })} /> */}
-                                    {/* <Button title="+" onPress={text => this.setState({ quantity: this.state.quantity + 1 })}></Button> */}
-                                    <TouchableOpacity onPress={() => this.handleSize(360)}><Text>S</Text></TouchableOpacity>
-                                    <TouchableOpacity onPress={() => this.handleSize(500)}><Text>M</Text></TouchableOpacity>
-                                    <TouchableOpacity onPress={() => this.handleSize(700)}><Text>L</Text></TouchableOpacity>
-                                    <TouchableOpacity onPress={() => this.handleAddGioHang(item.id_product)}>
-                                        <Text>Buy</Text></TouchableOpacity>
-                                </View>
-                            )
-                        })
-                    }
-                </View>
-                {/* <View style={body}>
+              );
+            })}
+        </View>
+        {/* <View style={body}>
                     <View style={productContainer}>
-                        <Image source={{ uri: 'http://192.168.1.12:8081/image/image-1676180053712.jpg' }} style={{ height: 200, width: 147 }}></Image>
+                        <Image source={{ uri: 'http://192.168.103.6:8081/image/image-1676180053712.jpg' }} style={{ height: 200, width: 147 }}></Image>
                         <Text>Product name</Text>
 
                         <TouchableOpacity onPress={() => this.handleAddGioHang()}>
@@ -121,41 +144,50 @@ class TopProduct extends Component {
                         <Text>200$</Text>
                     </View>
                 </View>*/}
-
-            </View>
-        )
-    }
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
-    container: {
-        backgroundColor: '#fff', margin: 10
-    },
-    titleContainer: {
-        height: 50, justifyContent: 'center', paddingLeft: 10,
-        shadowColor: '#2E272B',
-        shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.2
-    },
-    body: { flexDirection: 'row', justifyContent: 'space-around', flexWrap: 'wrap' },
-    productContainer: {
-        borderWidth: 1,
-        width: 150, shadowColor: '#2E272B',
-        shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.2,
-        marginBottom: 10
-    },
-
-})
+  container: {
+    backgroundColor: "#fff",
+    margin: 10,
+  },
+  titleContainer: {
+    height: 50,
+    justifyContent: "center",
+    paddingLeft: 10,
+    shadowColor: "#2E272B",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+  },
+  body: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    flexWrap: "wrap",
+  },
+  productContainer: {
+    borderWidth: 1,
+    width: 150,
+    shadowColor: "#2E272B",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    marginBottom: 10,
+  },
+});
 
 const mapStateToProps = (state) => {
-    return {
-        reduxState: state
-    }
-}
+  return {
+    reduxState: state,
+  };
+};
 
 const mapDispatchToProps = (dispatch) => {
-    return {
-        product: (id_product) => dispatch({ type: 'id_product', payload: id_product })
-    }
-}
+  return {
+    product: (id_product) =>
+      dispatch({ type: "id_product", payload: id_product }),
+  };
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(TopProduct)
+export default connect(mapStateToProps, mapDispatchToProps)(TopProduct);
