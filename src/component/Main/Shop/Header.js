@@ -36,7 +36,7 @@ export default class Header extends Component {
   onSearch = async () => {
     //console.log('Phong');
     let data = { name: 1 };
-    let res = await axios.post("http://192.168.1.12:8081/api/v1/search", {
+    let res = await axios.post("http://192.168.103.6:8081/api/v1/search", {
       name: this.state.textSearch,
     });
     console.log("Search: ", res.data);
@@ -86,9 +86,13 @@ export default class Header extends Component {
               alignItems: "center",
             }}
           >
-            <Ionicons onPress={<Cart />} name="cart" color={colors["white-smoke"]} size={10 * 3} />
+            <Ionicons
+              onPress={<Cart />}
+              name="cart"
+              color={colors["white-smoke"]}
+              size={10 * 3}
+            />
           </BlurView>
-
         </View>
 
         <View
@@ -102,7 +106,6 @@ export default class Header extends Component {
             style={{
               alignItems: "center",
               justifyContent: "center",
-
             }}
           >
             <TextInput
@@ -112,7 +115,6 @@ export default class Header extends Component {
                 fontSize: 10 * 1.7,
                 padding: 10,
                 paddingLeft: 10 * 3.5,
-
               }}
               placeholder="Find Your Coffee..."
               placeholderTextColor={colors.light}
@@ -142,6 +144,6 @@ const style = StyleSheet.create({
   }, //
   row1: { flexDirection: "row", justifyContent: "space-between" },
   textInput: { height: windowHeight / 20, backgroundColor: "#ffffff" }, // marginTop: 10
-  iconStyle: { height: 30, width: 30, },
-  textStyle: { fontSize: 25, color: "#FF7F24", fontWeight: "600", },
+  iconStyle: { height: 30, width: 30 },
+  textStyle: { fontSize: 25, color: "#FF7F24", fontWeight: "600" },
 });
