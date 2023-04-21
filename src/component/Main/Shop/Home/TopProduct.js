@@ -39,7 +39,7 @@ class TopProduct extends Component {
             //let response = await handleGetAllUser('ALL');
             //let response = await handleGetAllUserShop()
             let response = await addCart(token, id_product, 1, this.state.size)
-            let cart = await axios.post('http://192.168.1.12:8081/api/v1/account');
+            let cart = await axios.post('http://192.168.103.6:8081/api/v1/account');
             global.setArrCart(cart.data.list);
             global.setTabBarBadge(cart.data.list.length);
 
@@ -80,7 +80,7 @@ class TopProduct extends Component {
                             return (
                                 <View style={productContainer}>
                                     {/* this.props.navigation.push */}
-                                    <TouchableOpacity onPress={() => this.diDenProductDetail(item.id_product)}><Image source={{ uri: `http://192.168.1.12:8081${item.images}` }} style={{ height: 130, width: 147 }}></Image></TouchableOpacity>
+                                    <TouchableOpacity onPress={() => this.diDenProductDetail(item.id_product)}><Image source={{ uri: `http://192.168.103.6:8081${item.images}` }} style={{ height: 130, width: 147 }}></Image></TouchableOpacity>
                                     <Text>{item.name}</Text>
                                     <Text>{item.price}nghìn đồng</Text>
                                     <Text>{item.detail}</Text>
@@ -99,7 +99,7 @@ class TopProduct extends Component {
                 </View>
                 {/* <View style={body}>
                     <View style={productContainer}>
-                        <Image source={{ uri: 'http://192.168.1.12:8081/image/image-1676180053712.jpg' }} style={{ height: 200, width: 147 }}></Image>
+                        <Image source={{ uri: 'http://192.168.103.6:8081/image/image-1676180053712.jpg' }} style={{ height: 200, width: 147 }}></Image>
                         <Text>Product name</Text>
 
                         <TouchableOpacity onPress={() => this.handleAddGioHang()}>

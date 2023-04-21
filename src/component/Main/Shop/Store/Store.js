@@ -1,9 +1,7 @@
-
 import colors from "./colors";
 
-
 import React, { Component } from "react";
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 import {
   ScrollView,
   View,
@@ -36,9 +34,9 @@ class Store extends Component {
       arr: [],
       quantity: 0,
       listCategory: [],
-      trangthai: ''
+      trangthai: "",
     };
-    global.setArrCart = () => { }; //Khai báo cho có
+    global.setArrCart = () => {}; //Khai báo cho có
     global.setArrSearch = (arrSearch) =>
       this.setState(
         {
@@ -58,7 +56,7 @@ class Store extends Component {
     });
 
     let listCategory = await axios.get(
-      "http://192.168.1.12:8081/api/v1/category?id=ALL"
+      "http://192.168.103.6:8081/api/v1/category?id=ALL"
     );
     console.log("Tan: ", listCategory.data.listCategory);
     this.setState({
@@ -74,7 +72,7 @@ class Store extends Component {
       //let response = await handleGetAllUser('ALL');
       //let response = await handleGetAllUserShop()
       let response = await addCart(token, id_product, 1);
-      let cart = await axios.post("http://192.168.1.12:8081/api/v1/account");
+      let cart = await axios.post("http://192.168.103.6:8081/api/v1/account");
       global.setArrCart(cart.data.list);
       global.setTabBarBadge(cart.data.list.length);
     } catch (e) {
@@ -85,28 +83,27 @@ class Store extends Component {
   diDenProductDetail = (id_product) => {
     console.log("Detail product:", id_product);
     // global.id_product(id_product);
-    this.props.product(id_product)
+    this.props.product(id_product);
     this.props.navigation.push("DETAIL_PRODUCT");
   };
 
   onClickTrangThai = async (trangthai, id_category) => {
     console.log(id_category);
     let arrProduct = await axios.get(
-      `http://192.168.1.12:8081/api/v1/admin/product?id=${id_category}`
+      `http://192.168.103.6:8081/api/v1/admin/product?id=${id_category}`
     );
-    console.log('id_category:', arrProduct.data.listProduct);
+    console.log("id_category:", arrProduct.data.listProduct);
     this.setState({
       trangthai: trangthai,
-      arr: arrProduct.data.listProduct
-    })
-  }
+      arr: arrProduct.data.listProduct,
+    });
+  };
   render() {
     let listCategory = this.state.listCategory;
     let arrProduct = this.state.arr;
     console.log("Xem thử:", arrProduct);
     return (
       <ScrollView style={styles.viewContent}>
-
         {/* Danh Mục */}
         <View>
           <Text style={styles.titile}>Danh mục sản phẩm</Text>
@@ -116,7 +113,14 @@ class Store extends Component {
             horizontal={true}
             renderItem={({ item, index }) => (
               <TouchableOpacity style={styles.item}>
-                <Text style={this.state.trangthai == index ? styles.textitemac : styles.textitem} onPress={() => this.onClickTrangThai(index, item.id_category)}>
+                <Text
+                  style={
+                    this.state.trangthai == index
+                      ? styles.textitemac
+                      : styles.textitem
+                  }
+                  onPress={() => this.onClickTrangThai(index, item.id_category)}
+                >
                   {item.name}
                 </Text>
               </TouchableOpacity>
@@ -139,10 +143,15 @@ class Store extends Component {
                       {/* <Image
                         style={styles.img}
                         source={{
-                          uri: `http://192.168.1.12:8081${item.images}`,
+                          uri: `http://192.168.103.6:8081${item.images}`,
                         }}
                       ></Image> */}
-                      <Image source={{ uri: `http://192.168.1.12:8081/image/${item.images}` }} style={styles.img} />
+                      <Image
+                        source={{
+                          uri: `http://192.168.103.6:8081/image/${item.images}`,
+                        }}
+                        style={styles.img}
+                      />
                     </TouchableOpacity>
                     <Text numberOfLines={2} style={styles.nametext}>
                       {item.name_product}
@@ -183,17 +192,18 @@ class Store extends Component {
 }
 const mapStateToProps = (state) => {
   return {
-    reduxState: state
-  }
-}
+    reduxState: state,
+  };
+};
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    product: (id_product) => dispatch({ type: 'id_product', payload: id_product })
-  }
-}
+    product: (id_product) =>
+      dispatch({ type: "id_product", payload: id_product }),
+  };
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(Store)
+export default connect(mapStateToProps, mapDispatchToProps)(Store);
 
 const styles = StyleSheet.create({
   viewContent: {
@@ -212,12 +222,20 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     marginLeft: 10,
   },
+  item:{
+    margin:10,
+    display:"flex",
+    flexDirection:"row",
+    justifyContent:"center",
+    alignItems:"center",
+  },
   textitem: {
-    color: colors.secondary, fontSize: 10 * 2
-
+    color: colors.secondary,
+    fontSize: 10 * 2,
   },
   textitemac: {
-    color: colors["white-smoke"], fontSize: 10 * 2
+    color: colors.primary,
+    fontSize: 10 * 2,
   },
   product: {
     width: width / 2 - 10 * 2,

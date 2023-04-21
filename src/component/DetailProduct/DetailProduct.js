@@ -47,7 +47,7 @@ class DetailProduct extends Component {
 
         // console.log("this.state.id_product", this.props.reduxState.id_product);
         let response = await axios.get(
-            `http://192.168.1.12:8081/api/v1/chiTiet?id=${this.props.reduxState.id_product}`
+            `http://192.168.103.6:8081/api/v1/chiTiet?id=${this.props.reduxState.id_product}`
         );
         console.log("Chi tiết sản phẩm:", response.data);
         this.setState({
@@ -93,7 +93,7 @@ class DetailProduct extends Component {
                     <ScrollView style={{ backgroundColor: "#000" }}>
                         <SafeAreaView>
                             <ImageBackground
-                                source={{ uri: `http://192.168.1.12:8081/image/${listProduct[0].images}` }}
+                                source={{ uri: `http://192.168.103.6:8081/image/${listProduct[0].images}` }}
                                 style={styles.imgbg}
                                 imageStyle={{
                                     borderRadius: 10 * 3,
@@ -206,10 +206,11 @@ class DetailProduct extends Component {
                             style={{
                                 marginRight: 10,
                                 backgroundColor: colors.primary,
-                                width: width / 2 + 10 * 1,
+                                width: width / 2.15 + 10 * 0.1,
                                 justifyContent: "center",
                                 alignItems: "center",
                                 borderRadius: 10 * 2,
+                                height:65,
                             }}
                         >
                             <Text

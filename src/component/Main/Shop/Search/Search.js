@@ -19,7 +19,7 @@ export default class Search extends Component {
     onSearch = async () => {
         //console.log('Phong');
         let data = { name: 1 }
-        let res = await axios.post('http://192.168.1.12:8081/api/v1/search', { name: this.state.textSearch },
+        let res = await axios.post('http://192.168.103.6:8081/api/v1/search', { name: this.state.textSearch },
             { headers: { 'content-type': 'application/x-www-form-urlencoded' } }
         );
         console.log(res.data.message);
