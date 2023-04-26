@@ -32,14 +32,13 @@ export default class Cart extends Component {
     this.toggleCheckbox = this.toggleCheckbox.bind(this);
     this.handlePress = this.handlePress.bind(this);
 
-    
     global.setArrCart = (listCart) =>
       this.setState(
         { listCart: listCart },
         console.log("List cart day ne:", listCart)
       );
   }
-  
+
   toggleCheckbox(id_product) {
     this.setState({ isChecked: !this.state.isChecked });
   }
@@ -130,7 +129,6 @@ export default class Cart extends Component {
     console.log(response.data);
   };
 
-
   render() {
     const listCart = this.state.listCart;
     const { quantity } = this.state;
@@ -155,14 +153,21 @@ export default class Cart extends Component {
             bottom: 15,
           }}
         >
-          <Text style={{ color: "#fff", fontSize: 24, fontWeight: "600",marginTop:10 }}>
+          <Text
+            style={{
+              color: "#fff",
+              fontSize: 24,
+              fontWeight: "600",
+              marginTop: 10,
+            }}
+          >
             Giỏ hàng của bạn
           </Text>
         </View>
 
-        <FlatList style={{marginTop:-16,}}
+        <FlatList
+          style={{ marginTop: -16 }}
           data={listCart}
-
           renderItem={({ item }) => (
             // <Image
             //   source={{ uri: `http://192.168.138.6:8081/${item.images}` }}
@@ -209,7 +214,6 @@ export default class Cart extends Component {
                   source={{
                     uri: `http://192.168.138.6:8081/image/${item.images}`,
                   }}
-                  
                   style={{
                     height: 80,
                     width: 80,
@@ -276,7 +280,9 @@ export default class Cart extends Component {
           keyExtractor={(item) => item.id}
         />
         <SafeAreaView style={styles.safefoot}>
-          <View style={{ flexDirection: "row",marginLeft:-10,marginTop:10, }}>
+          <View
+            style={{ flexDirection: "row", marginLeft: -10, marginTop: 10 }}
+          >
             <CheckBox
               // title={` ${this.state.check3 ? "Bỏ" : ""} Tất cả`}
               // checked={this.state.isChecked}
@@ -303,13 +309,13 @@ export default class Cart extends Component {
 
           <TouchableOpacity
             style={{
-              marginTop:14,
-              marginRight:16,
+              marginTop: 14,
+              marginRight: 16,
               backgroundColor: colors.primary,
               justifyContent: "center",
               alignItems: "center",
               borderRadius: 10 * 1.2,
-              height:44,
+              height: 44,
               width: 130,
             }}
           >
@@ -367,6 +373,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#000",
     flexDirection: "row",
     justifyContent: "space-between",
-    height:70,
+    height: 70,
   },
 });
