@@ -55,7 +55,7 @@ class DetailProduct extends Component {
   async componentDidMount() {
     // console.log("this.state.id_product", this.props.reduxState.id_product);
     let response = await axios.get(
-      `http://192.168.103.6:8081/api/v1/chiTiet?id=${this.props.reduxState.id_product}`
+      `http://192.168.138.6:8081/api/v1/chiTiet?id=${this.props.reduxState.id_product}`
     );
     console.log("Chi tiết sản phẩm:", response.data);
     this.setState({
@@ -80,7 +80,7 @@ class DetailProduct extends Component {
       //let response = await handleGetAllUser('ALL');
       //let response = await handleGetAllUserShop()
       let response = await addCart(token, id_product, 1);
-      let cart = await axios.post("http://192.168.103.6:8081/api/v1/account");
+      let cart = await axios.post("http://192.168.138.6:8081/api/v1/account");
       global.setArrCart(cart.data.list);
       global.setTabBarBadge(cart.data.list.length);
     } catch (e) {
@@ -117,7 +117,7 @@ class DetailProduct extends Component {
               <SafeAreaView>
                 <ImageBackground
                   source={{
-                    uri: `http://192.168.103.6:8081/image/${listProduct[0].images}`,
+                    uri: `http://192.168.138.6:8081/image/${listProduct[0].images}`,
                   }}
                   style={styles.imgbg}
                   imageStyle={{
@@ -253,17 +253,17 @@ class DetailProduct extends Component {
             </ScrollView>
             <SafeAreaView style={styles.safefoot}>
               <View style={styles.cart_view}>
-                <View style={{ flexDirection: "row" }}>
+                <TouchableOpacity style={{ flexDirection: "row" }}>
                   <FontAwesome5
                     name="cart-plus"
                     color={colors["white-smoke"]}
-                    size={10 * 2}
+                    size={10 * 3.2}
                   />
-                </View>
-                <Text style={styles.cart_text}>Giỏ Hàng</Text>
+                  <Text style={styles.cart_text}>Giỏ hàng</Text>
+                </TouchableOpacity>
               </View>
               <TouchableOpacity style={styles.buy_view}>
-                <Text style={styles.buy_text}>Buy Now</Text>
+                <Text style={styles.buy_text}>Mua ngay</Text>
               </TouchableOpacity>
             </SafeAreaView>
           </>
@@ -382,10 +382,11 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   cart_view: {
-    padding: 12,
+    padding: 6,
     alignItems: "center",
     justifyContent: "center",
-    paddingLeft: 10 * 5,
+    paddingLeft: 10 * 3.6,
+    paddingBottom:-24,
   },
   buy_view: {
     marginRight: 10,
@@ -398,8 +399,9 @@ const styles = StyleSheet.create({
   },
   cart_text: {
     color: colors.white,
-    fontSize: 10 * 2.2,
-    marginBottom: 4,
+    fontSize: 10 *1.8,
+    fontWeight:'500',
+    marginLeft: 6,
   },
   buy_text: {
     color: colors.white,
