@@ -35,7 +35,7 @@ export default class Cart extends Component {
     }
     // let token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF9hY2NvdW50IjoxLCJlbWFpbCI6ImFkbWluLmZvb2RvcmRlckBnbWFpbC5jb20iLCJwaG9uZSI6IjAzMjEiLCJuYW1lIjoiS2ltIMSQ4bqhaSBQaG9uZyIsImNyZWF0ZWRfdGltZSI6IjIwMjItMDktMjFUMDU6MTI6MjYuMDAwWiIsImFkZHJlc3MiOiI1MiIsImF2YXRhciI6IicnIiwic3RhdHVzIjowLCJyb2xlIjoxLCJpYXQiOjE2Nzc3NDIzMjZ9.cVxNo4bTJq2zKQomgAlFFKHbfjCZ9y5Vm4zmcavUC3k'
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    let cart = await axios.post("http://192.168.103.6:8081/api/v1/account");
+    let cart = await axios.post("http://192.168.138.6:8081/api/v1/account");
     this.setState({ listCart: cart.data.list });
     global.setArrCart(cart.data.list);
     global.setTabBarBadge(cart.data.list.length);
@@ -47,9 +47,9 @@ export default class Cart extends Component {
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     //let response = await handleGetAllUser('ALL');
     //let response = await handleGetAllUserShop()
-    // let response = await axios.get('http://192.168.103.6:8081/api/v1/admin/account')
+    // let response = await axios.get('http://192.168.138.6:8081/api/v1/admin/account')
     let response = await axios.post(
-      "http://192.168.103.6:8081/api/v1/product/2"
+      "http://192.168.138.6:8081/api/v1/product/2"
     );
     console.log("Check token add cart:", response);
   };
@@ -60,12 +60,12 @@ export default class Cart extends Component {
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     //let response = await handleGetAllUser('ALL');
     //let response = await handleGetAllUserShop()
-    // let response = await axios.get('http://192.168.103.6:8081/api/v1/admin/account')
+    // let response = await axios.get('http://192.168.138.6:8081/api/v1/admin/account')
     let response = await axios.delete(
-      `http://192.168.103.6:8081/api/v1/product/${id_product}`
+      `http://192.168.138.6:8081/api/v1/product/${id_product}`
     );
     console.log(response);
-    let cart = await axios.post("http://192.168.103.6:8081/api/v1/account");
+    let cart = await axios.post("http://192.168.138.6:8081/api/v1/account");
     console.log("CArt", cart.data);
     if (cart && cart.data && cart.data.list) {
       global.setArrCart(cart.data.list);
@@ -85,14 +85,14 @@ export default class Cart extends Component {
   xemDon = async () => {
     let token = await getToken();
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    let response = await axios.get(`http://192.168.103.6:8081/api/v1/order`);
+    let response = await axios.get(`http://192.168.138.6:8081/api/v1/order`);
     console.log(response.data);
   };
 
   datHang = async () => {
     let token = await getToken();
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    let response = await axios.post(`http://192.168.103.6:8081/api/v1/pay`);
+    let response = await axios.post(`http://192.168.138.6:8081/api/v1/pay`);
     console.log(response.data);
   };
 
@@ -145,7 +145,7 @@ export default class Cart extends Component {
             >
               <View>
                 <Image
-                  source={{ uri: `http://192.168.103.6:8081/${item.images}` }}
+                  source={{ uri: `http://192.168.138.6:8081/${item.images}` }}
                   style={{ height: 60, width: 60, alignItems: "center" }}
                 ></Image>
               </View>

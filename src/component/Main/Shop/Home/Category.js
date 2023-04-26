@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { View, Text, StyleSheet, Dimensions, Image } from 'react-native'
 
-import fit from '../../../../public/temp/fit.jpg'
-import maxi from '../../../../public/temp/maxi.jpg'
-
-import little from '../../../../public/temp/little.jpg'
+import CaPheDen from '../../../../../assets/Anh/CaPheDen.jpg'
+import TraSuaTranChau from '../../../../../assets/Anh/TraSuaTranChau.jpg'
+import SPACING from "../config/SPACING";
+import TraSuaTruyenThong from '../../../../../assets/Anh/TraSuaTruyenThong.jpg'
 const heightWindow = Dimensions.get("window").height;
 
 import Swiper from "react-native-swiper";
@@ -12,22 +12,32 @@ import Swiper from "react-native-swiper";
 export default class Category extends Component {
 
     render() {
-        const { wrapper } = style
         return (
-            <View style={wrapper}>
-                <Text>Danh sách sản phẩm</Text>
-                <Swiper>
-                    <Image source={fit} style={{ height: 150, width: 300 }} />
-                    <Image source={maxi} style={{ height: 150, width: 300 }} />
-                    <Image source={little} style={{ height: 150, width: 300 }} />
+            <View style={styles.wrapper}>
+                {/* <Text>Sản phẩm bán chạy</Text> */}
+                <Swiper style={styles.swipper}>
+                    <Image source={CaPheDen} style={styles.Image} />
+                    <Image source={TraSuaTranChau} style={styles.Image} />
+                    <Image source={TraSuaTruyenThong} style={styles.Image} />
                 </Swiper>
             </View>
         )
+
     }
 }
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
     wrapper: {
-        height: heightWindow / 3, backgroundColor: '#ffffff', margin: 7
+        height: heightWindow / 3, 
+        backgroundColor: 'none', 
+        margin:35
+    },
+    swipper: {
+        borderRadius: 10
+    },
+    Image: {
+        height: 270, 
+        width: 270,
+        borderRadius:10
     }
 })

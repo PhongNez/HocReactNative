@@ -18,7 +18,7 @@ export default class Authentication extends Component {
     }
 
     diDenMain = () => {
-        this.props.navigation.popToTop()
+        this.props.navigation.push('MAIN')
     }
 
     signIn = () => {
@@ -37,24 +37,23 @@ export default class Authentication extends Component {
 
         const mainJSX = this.state.signIn ? <SignUp /> : <SignIn diDenMain={this.diDenMain} />
         return (
-            <View style={{ backgroundColor: "#02be6e", flex: 1 }}>
-                <Text>Hello from Authentication</Text>
-                <TouchableOpacity
-                    onPress={() => this.quayLai()}>
-                    <Text>Go to back</Text>
-                </TouchableOpacity>
-                {mainJSX}
+            <View style={{ backgroundColor: "#f5fcff", justifyContent:'center',alignContent:'center' }}>
+                
+                
 
-                <TouchableOpacity style={{ height: 50, width: 150, backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center', marginTop: 100 }}
-                    onPress={() => this.signIn()}
-                >
-                    <Text >SIGN IN</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ height: 50, width: 150, backgroundColor: '#fff', justifyContent: 'center', alignItems: 'center', marginTop: 20 }}
+                
+                <TouchableOpacity style={{marginBottom:0,marginLeft:120, padding: 0, height: 50, width: 150, backgroundColor: "#rgba(0,145,234,1)", justifyContent: 'center', alignItems: 'center', borderRadius: 20}}
                     onPress={() => this.signUp()}
                 >
-                    <Text >SIGN UP</Text>
+                    <Text >Đăng ký</Text>
                 </TouchableOpacity>
+                <TouchableOpacity style={{marginTop: 0, marginLeft:120, padding: 0
+                , height: 50, width: 150, backgroundColor: 'none', justifyContent: 'center', alignItems: 'center'}}
+                    onPress={() => this.quayLai()}>
+                    <Text>Quay lại</Text>
+                    
+                </TouchableOpacity>
+                {mainJSX}
 
             </View>
         );

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Text, View, TouchableOpacity, Dimensions } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import Home from "./Home/Home";
-import Contact from "./Contact/Contact";
+import Profile from "./Profile/Profile";
 import Store from "./Store/Store";
 import Cart from "./Cart/Cart";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -82,34 +82,34 @@ export default class Shop extends Component {
                 iconName = focused ? "shopping-cart" : "shopping-cart";
               } else if (route.name === "Settings") {
                 iconName = focused ? "ios-list" : "ios-list-outline";
-              }
+}
 
-              if (route.name === "Trang Cá Nhân") {
-                iconName = focused ? "user-alt" : "user-alt";
-              } else if (route.name === "Settings") {
-                iconName = focused ? "ios-list" : "ios-list-outline";
-              }
-              // You can return any component that you like here!
-              return (
-                <FontAwesome5 name={iconName} size={10 * 2.3} color={color} />
-              );
-            },
-            tabBarActiveTintColor: "#945305",
-            tabBarInactiveTintColor: "#000",
-            headerShown: false,
-          })}
-        >
-          <Tab.Screen name="Home" component={Home} />
-          <Tab.Screen name="Store" component={Store} />
-          <Tab.Screen
-            name="Cart"
-            component={Cart}
-            options={{ tabBarBadge: setTabBarBadge }}
-          />
-          <Tab.Screen name="Trang Cá Nhân" component={Contact} />
-        </Tab.Navigator>
-        {/* </NavigationContainer> */}
-      </View>
-    );
-  }
+if (route.name === "Trang Cá Nhân") {
+  iconName = focused ? "user-alt" : "user-alt";
+} else if (route.name === "Settings") {
+  iconName = focused ? "ios-list" : "ios-list-outline";
+}
+// You can return any component that you like here!
+return (
+  <FontAwesome5 name={iconName} size={10 * 2.3} color={color} />
+);
+},
+tabBarActiveTintColor: "#945305",
+tabBarInactiveTintColor: "#000",
+headerShown: false,
+})}
+>
+<Tab.Screen name="Home" component={Home} />
+<Tab.Screen name="Store" component={Store} />
+<Tab.Screen
+name="Cart"
+component={Cart}
+options={{ tabBarBadge: setTabBarBadge }}
+/>
+<Tab.Screen name="Trang Cá Nhân" component={Profile} />
+</Tab.Navigator>
+{/* </NavigationContainer> */}
+</View>
+);
+}
 }

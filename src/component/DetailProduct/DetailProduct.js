@@ -55,7 +55,7 @@ class DetailProduct extends Component {
   async componentDidMount() {
     // console.log("this.state.id_product", this.props.reduxState.id_product);
     let response = await axios.get(
-      `http://192.168.103.6:8081/api/v1/chiTiet?id=${this.props.reduxState.id_product}`
+      `http://192.168.138.6:8081/api/v1/chiTiet?id=${this.props.reduxState.id_product}`
     );
     console.log("Chi tiết sản phẩm:", response.data);
     this.setState({
@@ -80,7 +80,7 @@ class DetailProduct extends Component {
       //let response = await handleGetAllUser('ALL');
       //let response = await handleGetAllUserShop()
       let response = await addCart(token, id_product, 1);
-      let cart = await axios.post("http://192.168.103.6:8081/api/v1/account");
+      let cart = await axios.post("http://192.168.138.6:8081/api/v1/account");
       global.setArrCart(cart.data.list);
       global.setTabBarBadge(cart.data.list.length);
     } catch (e) {
@@ -117,7 +117,7 @@ class DetailProduct extends Component {
               <SafeAreaView>
                 <ImageBackground
                   source={{
-                    uri: `http://192.168.103.6:8081/image/${listProduct[0].images}`,
+                    uri: `http://192.168.138.6:8081/image/${listProduct[0].images}`,
                   }}
                   style={styles.imgbg}
                   imageStyle={{
