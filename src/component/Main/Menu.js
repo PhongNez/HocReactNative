@@ -106,7 +106,7 @@ export default class Menu extends Component {
     return (
       <View style={container}>
         <Image
-          source={{ uri: `http://192.168.103.6:8081/image/${image}` }}
+          source={{ uri: `http://192.168.138.6:8081/image/${image}` }}
           style={profile}
         />
 

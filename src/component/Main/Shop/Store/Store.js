@@ -56,7 +56,7 @@ class Store extends Component {
     });
 
     let listCategory = await axios.get(
-      "http://192.168.103.6:8081/api/v1/category?id=ALL"
+      "http://192.168.138.6:8081/api/v1/category?id=ALL"
     );
     console.log("Tan: ", listCategory.data.listCategory);
     this.setState({
@@ -64,6 +64,7 @@ class Store extends Component {
     });
     console.log("Danh sach san pham", response);
   }
+  
 
   handleAddGioHang = async (id_product) => {
     try {
@@ -72,7 +73,7 @@ class Store extends Component {
       //let response = await handleGetAllUser('ALL');
       //let response = await handleGetAllUserShop()
       let response = await addCart(token, id_product, 1);
-      let cart = await axios.post("http://192.168.103.6:8081/api/v1/account");
+      let cart = await axios.post("http://192.168.138.6:8081/api/v1/account");
       global.setArrCart(cart.data.list);
       global.setTabBarBadge(cart.data.list.length);
     } catch (e) {
@@ -90,7 +91,7 @@ class Store extends Component {
   onClickTrangThai = async (trangthai, id_category) => {
     console.log(id_category);
     let arrProduct = await axios.get(
-      `http://192.168.103.6:8081/api/v1/admin/product?id=${id_category}`
+      `http://192.168.138.6:8081/api/v1/admin/product?id=${id_category}`
     );
     console.log("id_category:", arrProduct.data.listProduct);
     this.setState({
@@ -103,9 +104,8 @@ class Store extends Component {
     let arrProduct = this.state.arr;
     console.log("Xem thử:", arrProduct);
     return (
-      <ScrollView style={styles.viewContent}>
-        {/* Danh Mục */}
-        <View>
+      <>
+        <View style={{backgroundColor:"#000"}}>
           <Text style={styles.title}>Danh mục sản phẩm</Text>
           {/* Danh Mục */}
           <FlatList
@@ -128,65 +128,70 @@ class Store extends Component {
             keyExtractor={(item) => item.id}
           />
         </View>
+        <ScrollView style={styles.viewContent}>
+          {/* Danh Mục */}
 
-        <View style={styles.bodyview}>
-          {arrProduct &&
-            arrProduct.map((item, index) => {
-              return (
-                <View style={styles.product}>
-                  {/* this.props.navigation.push */}
-                  <BlurView tint="dark" intensity={95} style={styles.pad}>
-                    <TouchableOpacity
-                      style={styles.container}
-                      onPress={() => this.diDenProductDetail(item.id_product)}
-                    >
-                      {/* <Image
+          <View style={styles.bodyview}>
+            {arrProduct &&
+              arrProduct.map((item, index) => {
+                return (
+                  <View style={styles.product}>
+                    {/* this.props.navigation.push */}
+                    <BlurView tint="dark" intensity={95} style={styles.pad}>
+                      <TouchableOpacity
+                        style={styles.container}
+                        onPress={() => this.diDenProductDetail(item.id_product)}
+                      >
+                        {/* <Image
                         style={styles.img}
                         source={{
-                          uri: `http://192.168.103.6:8081${item.images}`,
+                          uri: `http://192.168.138.6:8081${item.images}`,
                         }}
                       ></Image> */}
-                      <Image
-                        source={{
-                          uri: `http://192.168.103.6:8081/image/${item.images}`,
-                        }}
-                        style={styles.img}
-                      />
-                    </TouchableOpacity>
-                    <Text numberOfLines={2} style={styles.nametext}>
-                      {item.name_product}
-                    </Text>
-                    <Text numberOfLines={2} style={styles.includedtext}>
-                      {item.detail}
-                    </Text>
-                    <View style={styles.infoview}>
-                      <View style={styles.priceview}>
-                        <Text style={styles.pricetext}>{item.price} VND</Text>
-                        {/* <TextInput
+                        <Image
+                          source={{
+                            uri: `http://192.168.138.6:8081/image/${item.images}`,
+                          }}
+                          style={styles.img}
+                        />
+                      </TouchableOpacity>
+                      <Text numberOfLines={2} style={styles.nametext}>
+                        {item.name_product}
+                      </Text>
+                      <Text numberOfLines={1} style={styles.includedtext}>
+                        {item.detail}
+                      </Text>
+                      <View style={styles.infoview}>
+                        <View style={styles.priceview}>
+                          <Text style={styles.pricetext}>{item.price} VND</Text>
+                          {/* <TextInput
                         value={this.state.quantity}
                         onChangeText={(text) =>
                           this.setState({ quantity: text })
                         }
                       /> */}
-                        {/* <Button title="+" onPress={text => this.setState({ quantity: this.state.quantity + 1 })}></Button> */}
+                          {/* <Button title="+" onPress={text => this.setState({ quantity: this.state.quantity + 1 })}></Button> */}
+                        </View>
+                        <TouchableOpacity
+                          style={styles.add}
+                          onPress={() =>
+                            this.diDenProductDetail(item.id_product)
+                          }
+                        >
+                          <Ionicons
+                            name="add"
+                            size={10 * 2}
+                            color={colors.white}
+                          />
+                        </TouchableOpacity>
                       </View>
-                      <TouchableOpacity
-                        style={styles.add}
-                        onPress={() => this.diDenProductDetail(item.id_product)}
-                      >
-                        <Ionicons
-                          name="add"
-                          size={10 * 2}
-                          color={colors.white}
-                        />
-                      </TouchableOpacity>
-                    </View>
-                  </BlurView>
-                </View>
-              );
-            })}
-        </View>
-      </ScrollView>
+                    </BlurView>
+                  </View>
+                );
+              })}
+          </View>
+        </ScrollView>
+      </>
     );
   }
 }
@@ -203,12 +208,15 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
+
+
 export default connect(mapStateToProps, mapDispatchToProps)(Store);
 
 const styles = StyleSheet.create({
   viewContent: {
     backgroundColor: "#000",
-    padding: 10,
+    padding: 14,
+    // marginTop:8,
   },
   container: {
     height: 150,
@@ -218,12 +226,13 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontSize: 10 * 2.4,
     fontWeight: "600",
-    marginTop: -6,
     marginBottom: 10,
-    marginLeft: 10,
+    marginLeft: 14,
   },
   item: {
-    margin: 8,
+    margin: 14,
+    marginBottom:-2,
+    marginTop:-2,
     display: "flex",
     flexDirection: "row",
     justifyContent: "center",
