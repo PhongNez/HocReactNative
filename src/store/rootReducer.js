@@ -8,6 +8,8 @@ const initState = {
     id_category: 'ALL',
     id_product: 'ALL',
     id_order: '',
+    arrGioHang: [],
+    history: ''
 }
 
 const rootReducer = (state = initState, action) => {
@@ -58,6 +60,18 @@ const rootReducer = (state = initState, action) => {
             return {
                 ...state,
                 id_order: action.payload
+            }
+            break;
+        case 'arrCart':
+            return {
+                ...state,
+                arrGioHang: action.payload
+            }
+            break;
+        case 'history':
+            return {
+                ...state,
+                history: action.payload
             }
             break;
         default:

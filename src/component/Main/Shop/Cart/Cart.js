@@ -19,84 +19,105 @@ import { BlurView } from "expo-blur";
 import { CheckBox } from "react-native-elements";
 import { MaterialIcons } from "@expo/vector-icons";
 const { height, width } = Dimensions.get("window");
+import { connect } from "react-redux";
 
-export default class Cart extends Component {
+class Cart extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      listCart: null,
       quantity: 1,
       isChecked: false,
-      check3: false,
+      checkALL: false,
+      listCart: []
     };
     this.toggleCheckbox = this.toggleCheckbox.bind(this);
     this.handlePress = this.handlePress.bind(this);
-
-    
-    global.setArrCart = (listCart) =>
-      this.setState(
-        { listCart: listCart },
-        console.log("List cart day ne:", listCart)
-      );
   }
-  
+
   toggleCheckbox(id_product) {
     this.setState({ isChecked: !this.state.isChecked });
   }
-  handlePress() {
-    this.setState((prevState) => ({
-      check3: !prevState.check3,
-    }));
+  handlePress = () => {
+    // this.setState((prevState) => ({
+    //   checkALL: !prevState.checkALL,
+    // }));
+    // let listCart = this.state.listCart
+    let copyState = { ...this.state }
+    if (this.state.checkALL == false) {
+      for (let i = 0; i < this.props.reduxState.arrGioHang.length; i++) {
+        copyState['checked' + i] = true;
+      }
+
+      this.setState({
+        ...copyState,
+        checkALL: true
+      }, () => console.log('Check: ', this.state))
+    }
+    else {
+      for (let i = 0; i < this.props.reduxState.arrGioHang.length; i++) {
+        copyState['checked' + i] = false;
+      }
+      this.setState({
+        ...copyState,
+        checkALL: false
+      }, () => console.log('Check: ', this.state))
+    }
+    // if (!copyState['checked' + index]) {
+    //   copyState['checked' + index] = true;
+    //   // listCart.push(item)
+    // }
+    // else {
+    //   copyState['checked' + index] = false;
+    // const id = listCart.indexOf(item);
+    // if (id > -1) { // only splice array when item is found
+    //   listCart.splice(id, 1); // 2nd parameter means remove one item only
+    // }
+    //}
+
+
   }
 
   async componentDidMount() {
     let token = await getToken();
-    console.log("Token cart: ", token);
-    if (!token) {
-      this.setState({
-        listCart: null,
-      });
-    }
-    // let token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF9hY2NvdW50IjoxLCJlbWFpbCI6ImFkbWluLmZvb2RvcmRlckBnbWFpbC5jb20iLCJwaG9uZSI6IjAzMjEiLCJuYW1lIjoiS2ltIMSQ4bqhaSBQaG9uZyIsImNyZWF0ZWRfdGltZSI6IjIwMjItMDktMjFUMDU6MTI6MjYuMDAwWiIsImFkZHJlc3MiOiI1MiIsImF2YXRhciI6IicnIiwic3RhdHVzIjowLCJyb2xlIjoxLCJpYXQiOjE2Nzc3NDIzMjZ9.cVxNo4bTJq2zKQomgAlFFKHbfjCZ9y5Vm4zmcavUC3k'
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    let cart = await axios.post("http://192.168.138.6:8081/api/v1/account");
-    this.setState({ listCart: cart.data.list });
-    global.setArrCart(cart.data.list);
-    global.setTabBarBadge(cart.data.list.length);
+    global.setTabBarBadge(this.props.reduxState.arrGioHang.length);
+    let cart = await axios.post("http://192.168.1.10:8081/api/v1/account");
+    console.log(cart.data);
+    this.props.arrGioHang(cart.data.list)
   }
 
   addCart = async () => {
     let token = await getToken();
-    // let token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF9hY2NvdW50IjoxLCJlbWFpbCI6ImFkbWluLmZvb2RvcmRlckBnbWFpbC5jb20iLCJwaG9uZSI6IjAzMjEiLCJuYW1lIjoiS2ltIMSQ4bqhaSBQaG9uZyIsImNyZWF0ZWRfdGltZSI6IjIwMjItMDktMjFUMDU6MTI6MjYuMDAwWiIsImFkZHJlc3MiOiI1MiIsImF2YXRhciI6IicnIiwic3RhdHVzIjowLCJyb2xlIjoxLCJpYXQiOjE2Nzc3NDIzMjZ9.cVxNo4bTJq2zKQomgAlFFKHbfjCZ9y5Vm4zmcavUC3k'
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    //let response = await handleGetAllUser('ALL');
-    //let response = await handleGetAllUserShop()
-    // let response = await axios.get('http://192.168.138.6:8081/api/v1/admin/account')
     let response = await axios.post(
-      "http://192.168.138.6:8081/api/v1/product/2"
+      "http://192.168.1.10:8081/api/v1/product/2"
     );
     console.log("Check token add cart:", response);
   };
 
-  deleteCart = async (id_product) => {
+  deleteCart = async (id_product, size) => {
     let token = await getToken();
     // let token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF9hY2NvdW50IjoxLCJlbWFpbCI6ImFkbWluLmZvb2RvcmRlckBnbWFpbC5jb20iLCJwaG9uZSI6IjAzMjEiLCJuYW1lIjoiS2ltIMSQ4bqhaSBQaG9uZyIsImNyZWF0ZWRfdGltZSI6IjIwMjItMDktMjFUMDU6MTI6MjYuMDAwWiIsImFkZHJlc3MiOiI1MiIsImF2YXRhciI6IicnIiwic3RhdHVzIjowLCJyb2xlIjoxLCJpYXQiOjE2Nzc3NDIzMjZ9.cVxNo4bTJq2zKQomgAlFFKHbfjCZ9y5Vm4zmcavUC3k'
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     //let response = await handleGetAllUser('ALL');
     //let response = await handleGetAllUserShop()
-    // let response = await axios.get('http://192.168.138.6:8081/api/v1/admin/account')
+    // let response = await axios.get('http://192.168.1.10:8081/api/v1/admin/account')
+    console.log("Size: ", size);
     let response = await axios.delete(
-      `http://192.168.138.6:8081/api/v1/product/${id_product}`
+      `http://192.168.1.10:8081/api/v1/product/${id_product}`, { data: { size } }
     );
     console.log(response);
-    let cart = await axios.post("http://192.168.138.6:8081/api/v1/account");
+    let cart = await axios.post("http://192.168.1.10:8081/api/v1/account");
     console.log("CArt", cart.data);
     if (cart && cart.data && cart.data.list) {
-      global.setArrCart(cart.data.list);
+      // global.setArrCart(cart.data.list);
+      this.props.arrGioHang(cart.data.list);
+
       console.log("CArt hien thi: ", cart.data.list.length);
       global.setTabBarBadge(cart.data.list.length);
     } else {
-      global.setArrCart([]);
+      // global.setArrCart([]);
+      this.props.arrGioHang([]);
       global.setTabBarBadge(0);
     }
     this.setState({
@@ -106,36 +127,75 @@ export default class Cart extends Component {
     // global.setArrCart(listCart)
   };
 
-  handleIncrement = () => {
-    const { quantity } = this.state;
-    this.setState({ quantity: quantity + 1 });
+  handleIncrement = async (id_product, quantity1, size1) => {
+    console.log(quantity1, size1);
+
+
+
+    let response = await axios.put(
+      `http://192.168.1.10:8081/api/v1/account/tangSoLuongCart/${id_product}`, { data: { quantity: quantity1, size: size1 } }
+    );
+    let cart = await axios.post("http://192.168.1.10:8081/api/v1/account");
+    this.props.arrGioHang(cart.data.list)
+    console.log(response);
   };
 
-  handleDecrement = () => {
-    const { quantity } = this.state;
-    if (quantity > 0) this.setState({ quantity: quantity - 1 });
+  handleDecrement = async (id_product, quantity1, size1) => {
+    console.log(quantity1, size1);
+    if (quantity1 > 1) {
+      let response = await axios.put(
+        `http://192.168.1.10:8081/api/v1/account/giamSoLuongCart/${id_product}`, { data: { quantity: quantity1, size: size1 } }
+      );
+      let cart = await axios.post("http://192.168.1.10:8081/api/v1/account");
+      this.props.arrGioHang(cart.data.list)
+      console.log(response);
+    }
   };
 
   xemDon = async () => {
     let token = await getToken();
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    let response = await axios.get(`http://192.168.138.6:8081/api/v1/order`);
+    let response = await axios.get(`http://192.168.1.10:8081/api/v1/order`);
     console.log(response.data);
   };
 
   datHang = async () => {
     let token = await getToken();
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    let response = await axios.post(`http://192.168.138.6:8081/api/v1/pay`);
+    let response = await axios.post(`http://192.168.1.10:8081/api/v1/pay`);
     console.log(response.data);
   };
 
+  handleCheckBox = (index, item) => {
+    let listCart = this.state.listCart
+    let copyState = { ...this.state }
+    if (!copyState['checked' + index]) {
+      copyState['checked' + index] = true;
+      listCart.push(item)
+    }
+    else {
+      copyState['checked' + index] = false;
+      // for (let i = 0; i < listCart.length; i++) {
+      //   if (listCart[i] === item) {
+      //     listCart.splice[i, 1]
+      //     // console.log("phong: ", listCart[i]);
+      //   }
+      // }
+      const id = listCart.indexOf(item);
+      if (id > -1) { // only splice array when item is found
+        listCart.splice(id, 1); // 2nd parameter means remove one item only
+      }
+    }
+
+    this.setState({
+      ...copyState
+    }, () => console.log('Check: ', this.state))
+  }
 
   render() {
-    const listCart = this.state.listCart;
+    let listCart = this.props.reduxState.arrGioHang
     const { quantity } = this.state;
-
-    console.log("Cart 1: ", listCart);
+    console.log('mang: ', this.state.listCart);
     // if (user) {
     //     console.log('Cart 2: ',);
     //     console.log('Cart 3: ',);
@@ -155,17 +215,17 @@ export default class Cart extends Component {
             bottom: 15,
           }}
         >
-          <Text style={{ color: "#fff", fontSize: 24, fontWeight: "600",marginTop:10 }}>
+          <Text style={{ color: "#fff", fontSize: 24, fontWeight: "600", marginTop: 10 }}>
             Giỏ hàng của bạn
           </Text>
         </View>
 
-        <FlatList style={{marginTop:-16,}}
+        <FlatList style={{ marginTop: -16, }}
           data={listCart}
 
-          renderItem={({ item }) => (
+          renderItem={({ item, index }) => (
             // <Image
-            //   source={{ uri: `http://192.168.138.6:8081/${item.images}` }}
+            //   source={{ uri: `http://192.168.1.10:8081/${item.images}` }}
             //   style={{ height: 60, width: 60, alignItems: "center" }}
             // ></Image>
 
@@ -197,9 +257,11 @@ export default class Cart extends Component {
                   style={{
                     alignSelf: "flex-start",
                   }}
-                  checked={this.state.check3}
-                  // checked={this.state.isChecked}
-                  // onPress={()=>this.toggleCheckbox(item.id_product)}
+                  checked={this.state['checked' + index]}
+
+                  onPress={() => this.handleCheckBox(index, item)}
+                // checked={this.state.isChecked}
+                // onPress={()=>this.toggleCheckbox(item.id_product)}
                 />
               </View>
 
@@ -207,9 +269,9 @@ export default class Cart extends Component {
                 <Image
                   // source={ImageCoffee}
                   source={{
-                    uri: `http://192.168.138.6:8081/image/${item.images}`,
+                    uri: `http://192.168.1.10:8081/image/${item.images}`,
                   }}
-                  
+
                   style={{
                     height: 80,
                     width: 80,
@@ -243,25 +305,35 @@ export default class Cart extends Component {
                 >
                   {item.price} VNĐ
                 </Text>
+                <Text
+                  style={{
+                    fontSize: 15,
+                    fontWeight: "500",
+                    color: "#fff",
+                    marginBottom: 12,
+                  }}
+                >
+                  Size: {item.size == 360 ? 'S' : item.size == 500 ? 'M' : 'L'}
+                </Text>
                 <View style={styles.container}>
                   <TouchableOpacity
                     style={styles.button}
-                    onPress={this.handleDecrement}
+                    onPress={() => this.handleDecrement(item.id_product, item.quantity, item.size)}
                   >
                     <Text style={styles.buttonText}>-</Text>
                   </TouchableOpacity>
-                  <Text style={styles.quantity}>{quantity}</Text>
+                  <Text style={styles.quantity}>{item.quantity}</Text>
                   {/* <Text style={styles.quantity}> {item.quantity}</Text> */}
                   <TouchableOpacity
                     style={styles.button}
-                    onPress={this.handleIncrement}
+                    onPress={() => this.handleIncrement(item.id_product, item.quantity, item.size)}
                   >
                     <Text style={styles.buttonText}>+</Text>
                   </TouchableOpacity>
                 </View>
 
                 <TouchableOpacity
-                  onPress={() => this.deleteCart(item.id_product)}
+                  onPress={() => this.deleteCart(item.id_product, item.size)}
                   style={{
                     position: "relative",
                     left: 200,
@@ -276,13 +348,13 @@ export default class Cart extends Component {
           keyExtractor={(item) => item.id}
         />
         <SafeAreaView style={styles.safefoot}>
-          <View style={{ flexDirection: "row",marginLeft:-10,marginTop:10, }}>
+          <View style={{ flexDirection: "row", marginLeft: -10, marginTop: 10, }}>
             <CheckBox
-              // title={` ${this.state.check3 ? "Bỏ" : ""} Tất cả`}
+              // title={` ${this.state.checkALL ? "Bỏ" : ""} Tất cả`}
               // checked={this.state.isChecked}
               // onPress={this.toggleCheckbox}
-              checked={this.state.check3}
-              onPress={this.handlePress}
+              checked={this.state.checkALL}
+              onPress={() => this.handlePress()}
               iconType="material-community"
               checkedIcon="checkbox-marked"
               uncheckedIcon="checkbox-blank-outline"
@@ -303,13 +375,13 @@ export default class Cart extends Component {
 
           <TouchableOpacity
             style={{
-              marginTop:14,
-              marginRight:16,
+              marginTop: 14,
+              marginRight: 16,
               backgroundColor: colors.primary,
               justifyContent: "center",
               alignItems: "center",
               borderRadius: 10 * 1.2,
-              height:44,
+              height: 44,
               width: 130,
             }}
           >
@@ -328,6 +400,21 @@ export default class Cart extends Component {
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    reduxState: state,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    arrGioHang: (arrGioHang) =>
+      dispatch({ type: "arrCart", payload: arrGioHang })
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Cart);
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
@@ -367,6 +454,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#000",
     flexDirection: "row",
     justifyContent: "space-between",
-    height:70,
+    height: 70,
   },
 });

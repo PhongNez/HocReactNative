@@ -36,7 +36,7 @@ class Store extends Component {
       listCategory: [],
       trangthai: "",
     };
-    global.setArrCart = () => {}; //Khai báo cho có
+    global.setArrCart = () => { }; //Khai báo cho có
     global.setArrSearch = (arrSearch) =>
       this.setState(
         {
@@ -56,7 +56,7 @@ class Store extends Component {
     });
 
     let listCategory = await axios.get(
-      "http://192.168.138.6:8081/api/v1/category?id=ALL"
+      "http://192.168.1.10:8081/api/v1/category?id=ALL"
     );
     console.log("Tan: ", listCategory.data.listCategory);
     this.setState({
@@ -64,7 +64,7 @@ class Store extends Component {
     });
     console.log("Danh sach san pham", response);
   }
-  
+
 
   handleAddGioHang = async (id_product) => {
     try {
@@ -73,7 +73,7 @@ class Store extends Component {
       //let response = await handleGetAllUser('ALL');
       //let response = await handleGetAllUserShop()
       let response = await addCart(token, id_product, 1);
-      let cart = await axios.post("http://192.168.138.6:8081/api/v1/account");
+      let cart = await axios.post("http://192.168.1.10:8081/api/v1/account");
       global.setArrCart(cart.data.list);
       global.setTabBarBadge(cart.data.list.length);
     } catch (e) {
@@ -84,6 +84,7 @@ class Store extends Component {
   diDenProductDetail = (id_product) => {
     console.log("Detail product:", id_product);
     // global.id_product(id_product);
+    this.props.history(this.props.navigation)
     this.props.product(id_product);
     this.props.navigation.push("DETAIL_PRODUCT");
   };
@@ -91,7 +92,7 @@ class Store extends Component {
   onClickTrangThai = async (trangthai, id_category) => {
     console.log(id_category);
     let arrProduct = await axios.get(
-      `http://192.168.138.6:8081/api/v1/admin/product?id=${id_category}`
+      `http://192.168.1.10:8081/api/v1/admin/product?id=${id_category}`
     );
     console.log("id_category:", arrProduct.data.listProduct);
     this.setState({
@@ -102,10 +103,10 @@ class Store extends Component {
   render() {
     let listCategory = this.state.listCategory;
     let arrProduct = this.state.arr;
-    console.log("Xem thử:", arrProduct);
+    console.log("Xem thử:", this.props);
     return (
       <>
-        <View style={{backgroundColor:"#000"}}>
+        <View style={{ backgroundColor: "#000" }}>
           <Text style={styles.title}>Danh mục sản phẩm</Text>
           {/* Danh Mục */}
           <FlatList
@@ -145,12 +146,12 @@ class Store extends Component {
                         {/* <Image
                         style={styles.img}
                         source={{
-                          uri: `http://192.168.138.6:8081${item.images}`,
+                          uri: `http://192.168.1.10:8081${item.images}`,
                         }}
                       ></Image> */}
                         <Image
                           source={{
-                            uri: `http://192.168.138.6:8081/image/${item.images}`,
+                            uri: `http://192.168.1.10:8081/image/${item.images}`,
                           }}
                           style={styles.img}
                         />
@@ -205,6 +206,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     product: (id_product) =>
       dispatch({ type: "id_product", payload: id_product }),
+    history: (history) =>
+      dispatch({ type: "history", payload: history })
   };
 };
 
@@ -231,8 +234,8 @@ const styles = StyleSheet.create({
   },
   item: {
     margin: 14,
-    marginBottom:-2,
-    marginTop:-2,
+    marginBottom: -2,
+    marginTop: -2,
     display: "flex",
     flexDirection: "row",
     justifyContent: "center",

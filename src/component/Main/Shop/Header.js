@@ -36,7 +36,7 @@ export default class Header extends Component {
   onSearch = async () => {
     //console.log('Phong');
     let data = { name: 1 };
-    let res = await axios.post("http://192.168.138.6:8081/api/v1/search", {
+    let res = await axios.post("http://192.168.1.10:8081/api/v1/search", {
       name: this.state.textSearch,
     });
     console.log("Search: ", res.data);
@@ -46,6 +46,7 @@ export default class Header extends Component {
   render() {
     console.log(this.state.textSearch);
     const { wrapper, row1, textInput, iconStyle, textStyle } = style;
+    console.log('Phong ', this.props);
     return (
       <View style={wrapper}>
         <View style={row1}>
@@ -88,6 +89,7 @@ export default class Header extends Component {
           >
             <Ionicons
               onPress={<Cart />}
+              // onPress={() => this.props.navigation.push('CART')}
               name="cart"
               color={colors["white-smoke"]}
               size={10 * 3}

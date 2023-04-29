@@ -20,7 +20,6 @@ export default class Shop extends Component {
       user: null,
       setTabBarBadge: 0,
     };
-
     global.setTabBarBadge = (setTabBarBadge) =>
       this.setState(
         {
@@ -28,16 +27,16 @@ export default class Shop extends Component {
         },
         console.log("setTabBarBadge global", setTabBarBadge)
       );
-      global.id_product = (id_product) => {
-        this.setState(
-          {
-            idproduct: id_product,
-          },
-          console.log(id_product)
-        );
-      };
+    global.id_product = (id_product) => {
+      this.setState(
+        {
+          idproduct: id_product,
+        },
+        console.log(id_product)
+      );
+    };
   }
-  componentDidMount() {}
+  componentDidMount() { }
   onpenMenu = () => {
     this.props.open();
   };
@@ -58,7 +57,7 @@ export default class Shop extends Component {
                         </Text>
                     </TouchableOpacity>
                 </View> */}
-        <Header open={this.onpenMenu} />
+        <Header open={this.onpenMenu} navigation={this.props.navigation} />
         {/* <NavigationContainer> */}
 
         <Tab.Navigator

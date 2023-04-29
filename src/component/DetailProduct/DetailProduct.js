@@ -14,7 +14,8 @@ import {
 import global from "../../global/global";
 import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
-
+import getToken from "../../global/getToken";
+import { addCart } from "../../component/api/userServices";
 import colors from "../Main/Shop/Store/colors";
 
 import coffee from "../Main/Shop/Store/Coffee";
@@ -27,14 +28,14 @@ class DetailProduct extends Component {
     super(props);
     this.state = {
       idproduct: "",
-      size: 0,
+      size: 360,
       listProduct: [],
       giaSize: 0,
       trangthai: "",
       quantity: 0,
     };
 
-    global.setArrCart = () => {}; //Khai báo cho có
+    global.setArrCart = () => { }; //Khai báo cho có
     global.setArrSearch = (arrSearch) =>
       this.setState(
         {
@@ -55,7 +56,7 @@ class DetailProduct extends Component {
   async componentDidMount() {
     // console.log("this.state.id_product", this.props.reduxState.id_product);
     let response = await axios.get(
-      `http://192.168.138.6:8081/api/v1/chiTiet?id=${this.props.reduxState.id_product}`
+      `http://192.168.1.10:8081/api/v1/chiTiet?id=${this.props.reduxState.id_product}`
     );
     console.log("Chi tiết sản phẩm:", response.data);
     this.setState({
@@ -73,16 +74,23 @@ class DetailProduct extends Component {
     if (quantity > 0) this.setState({ quantity: quantity - 1 });
   };
 
-  handleAddGioHang = async (id_product) => {
+  handleAddGioHang = async () => {
     try {
       let token = await getToken();
       console.log("Token: ", token);
+      let id_product = this.props.reduxState.id_product
       //let response = await handleGetAllUser('ALL');
       //let response = await handleGetAllUserShop()
-      let response = await addCart(token, id_product, 1);
-      let cart = await axios.post("http://192.168.138.6:8081/api/v1/account");
-      global.setArrCart(cart.data.list);
-      global.setTabBarBadge(cart.data.list.length);
+      if (this.state.quantity > 0) {
+        console.log(id_product, this.state.size, this.state.quantity);
+        let response = await addCart(token, id_product, this.state.quantity, this.state.size);
+        let cart = await axios.post("http://192.168.1.10:8081/api/v1/account");
+        console.log('Cart new: ', cart.data);
+        // global.setArrCart(cart.data.list);
+        this.props.arrGioHang(cart.data.list); //redux arr Gio Hang
+        global.setTabBarBadge(cart.data.list.length);
+      }
+      console.log("hello");
     } catch (e) {
       console.log(e);
     }
@@ -97,6 +105,8 @@ class DetailProduct extends Component {
       size: size,
       giaSize: giaSize,
       trangthai: trangthai,
+      state1: 'phong',
+      state2: 'hello'
     });
     console.log(this.state.size, this.state.giaSize);
   };
@@ -108,7 +118,7 @@ class DetailProduct extends Component {
     if (listProduct[0]) {
       console.log(listProduct[0].detail);
     }
-
+    console.log(this.props.reduxState);
     return (
       <>
         {listProduct && listProduct[0] && (
@@ -117,7 +127,7 @@ class DetailProduct extends Component {
               <SafeAreaView>
                 <ImageBackground
                   source={{
-                    uri: `http://192.168.138.6:8081/image/${listProduct[0].images}`,
+                    uri: `http://192.168.1.10:8081/image/${listProduct[0].images}`,
                   }}
                   style={styles.imgbg}
                   imageStyle={{
@@ -135,7 +145,7 @@ class DetailProduct extends Component {
                         size={10 * 2.5}
                       />
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttonhd}>
+                    <TouchableOpacity style={styles.buttonhd} onPress={() => this.props.navigation.push('CART')}>
                       <Ionicons
                         name="cart"
                         color={colors["white-smoke"]}
@@ -253,7 +263,7 @@ class DetailProduct extends Component {
             </ScrollView>
             <SafeAreaView style={styles.safefoot}>
               <View style={styles.cart_view}>
-                <TouchableOpacity style={{ flexDirection: "row" }}>
+                <TouchableOpacity style={{ flexDirection: "row" }} onPress={() => this.handleAddGioHang()}>
                   <FontAwesome5
                     name="cart-plus"
                     color={colors["white-smoke"]}
@@ -283,6 +293,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     product: (id_product) =>
       dispatch({ type: "id_product", payload: id_product }),
+    arrGioHang: (arrGioHang) =>
+      dispatch({ type: "arrCart", payload: arrGioHang })
   };
 };
 
@@ -386,7 +398,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingLeft: 10 * 3.6,
-    paddingBottom:-24,
+    paddingBottom: -24,
   },
   buy_view: {
     marginRight: 10,
@@ -399,8 +411,8 @@ const styles = StyleSheet.create({
   },
   cart_text: {
     color: colors.white,
-    fontSize: 10 *1.8,
-    fontWeight:'500',
+    fontSize: 10 * 1.8,
+    fontWeight: '500',
     marginLeft: 6,
   },
   buy_text: {

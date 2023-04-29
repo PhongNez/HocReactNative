@@ -6,6 +6,7 @@ import Drawer from 'react-native-drawer';
 import global from '../../global/global';
 import getToken from '../../global/getToken'
 import { checkToken } from '../api/userServices'
+import SignUp from '../Authentication/SignUp';
 export default class Main extends Component {
     constructor(props) {
         super(props);

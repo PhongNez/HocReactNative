@@ -5,10 +5,13 @@ import {
   StyleSheet,
   Dimensions,
   TextInput,
+  SafeAreaView,
   TouchableOpacity,
   Image,
   Button,
 } from "react-native";
+
+import { connect } from "react-redux";
 
 const heightWindow = Dimensions.get("window").height;
 // import ImagePicker from 'react-native-image-picker'
@@ -16,7 +19,7 @@ import { launchCamera, launchImageLibrary } from "react-native-image-picker";
 import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
 
-export default class SignUp extends Component {
+class SignUp extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -118,92 +121,254 @@ export default class SignUp extends Component {
     console.log(response);
   };
 
+  // quayLai = async () => {
+  //   await AsyncStorage.removeItem("@token");
+  //   this.props.navigation.goBack();
+  // };
+
   render() {
-    const { wrapper } = style;
+    // const { wrapper } = style;
     const { email, password, name, phone, avatar, address, setImage, image } =
       this.state;
     console.log(this.state.setImage);
     console.log(this.state.image);
+    console.log('TRang dang ky: ', this.props.reduxState);
     return (
-      <View>
-        <View style={{ height: 35, backgroundColor: "#fff", margin: 5 }}>
-          <TextInput
-            placeholder="Email"
-            value={email}
-            onChangeText={(text) => this.setState({ email: text })}
-          ></TextInput>
+      <SafeAreaView style={styles.main}>
+        <View style={styles.container}>
+          {/* <Image
+            source={{
+              uri: `https://aeonmall-haiphong-lechan.com.vn/wp-content/uploads/2021/01/resize-highlands-1000x625-3.jpg`,
+            }}
+            style={styles.logo}
+          ></Image> */}
+          <View style={styles.wFull}>
+            <View style={styles.row}>
+              <Text style={styles.brandName}>Đăng Ký</Text>
+            </View>
+
+            <TextInput
+              style={styles.input}
+              placeholder="Tên"
+              value={name}
+              onChangeText={(text) => this.setState({ name: text })}
+            ></TextInput>
+            <TextInput
+              style={styles.input}
+              placeholder="Email"
+              value={email}
+              onChangeText={(text) => this.setState({ email: text })}
+            ></TextInput>
+            <TextInput
+              style={styles.input}
+              placeholder="Mật Khẩu"
+              value={password}
+              onChangeText={(text) => this.setState({ password: text })}
+            ></TextInput>
+            <TextInput
+              style={styles.input}
+              placeholder="Số Điện Thoại"
+              value={phone}
+              onChangeText={(text) => this.setState({ phone: text })}
+            ></TextInput>
+            <TextInput
+              style={styles.input}
+              placeholder="Địa Chỉ"
+              value={address}
+              onChangeText={(text) => this.setState({ address: text })}
+            ></TextInput>
+
+            <View style={styles.takeImageBtn}>
+              <TouchableOpacity
+                activeOpacity={0.7}
+                style={styles.TakeImageBtn}
+                onPress={() => this.handleTakePhoto()}
+              >
+                <Text style={styles.ImageText}>Chụp Ảnh</Text>
+              </TouchableOpacity>
+              {/* <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}> */}
+              {image && (
+                <Image
+                  source={{ uri: image }}
+                  style={{ width: 80, height: 80 }}
+                />
+              )}
+              {/* <Button title="Take a photo" onPress={this.handleTakePhoto} /> */}
+              <TouchableOpacity
+                activeOpacity={0.7}
+                style={styles.TakeImageBtn}
+                onPress={() => this.pickImage()}
+              >
+                <Text style={styles.ImageText}>Chọn Ảnh Từ Thư Viện</Text>
+              </TouchableOpacity>
+              {setImage && (
+                <Image
+                  source={{ uri: setImage }}
+                  style={{ width: 80, height: 80 }}
+                />
+              )}
+            </View>
+
+            <View style={styles.loginBtnWrapper}>
+              <TouchableOpacity
+                // onPress={() => navigation.navigate()}
+                onPress={() => this.upload()}
+                activeOpacity={0.7}
+                style={styles.loginBtn}
+              >
+                <Text style={styles.loginText}>Đăng Ký</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <View style={styles.footer}>
+            <Text style={styles.footerText}> Bạn Đã Có Tài Khoản? </Text>
+            <TouchableOpacity onPress={() => this.props.reduxState.history.push('SIGN_IN')}>
+              <Text style={styles.signupBtn}>Đăng Nhập</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-        <View style={{ height: 35, backgroundColor: "#fff", margin: 5 }}>
-          <TextInput
-            placeholder="phone"
-            value={phone}
-            onChangeText={(text) => this.setState({ phone: text })}
-          ></TextInput>
-        </View>
-        <View style={{ height: 35, backgroundColor: "#fff", margin: 5 }}>
-          <TextInput
-            placeholder="password"
-            value={password}
-            onChangeText={(text) => this.setState({ password: text })}
-          ></TextInput>
-        </View>
-        <View style={{ height: 35, backgroundColor: "#fff", margin: 5 }}>
-          <TextInput
-            placeholder="name"
-            value={name}
-            onChangeText={(text) => this.setState({ name: text })}
-          ></TextInput>
-        </View>
-        <View style={{ height: 35, backgroundColor: "#fff", margin: 5 }}>
-          <TextInput
-            placeholder="address"
-            value={address}
-            onChangeText={(text) => this.setState({ address: text })}
-          ></TextInput>
-        </View>
-        {/* <TouchableOpacity style={{ height: 50, backgroundColor: '#fff', margin: 5 }} onPress={() => this.pickImage()}>
-                    <TextInput editable={false}>Ảnh Avatar</TextInput>
-                </TouchableOpacity> */}
-        <Button
-          title="Chụp ảnh"
-          onPress={() => this.handleTakePhoto()}
-          style={{}}
-        />
-        {/* <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}> */}
-        {image && (
-          <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
-        )}
-        {/* <Button title="Take a photo" onPress={this.handleTakePhoto} /> */}
-        <Button title="Chọn ảnh từ thư viện" onPress={() => this.pickImage()} />
-        {setImage && (
-          <Image
-            source={{ uri: setImage }}
-            style={{ width: 200, height: 200 }}
-          />
-        )}
-        {/* </View> */}
-        {/* <Image source={{ uri: `http://192.168.138.6:8081/image/logo-1677728192587.jpg` }} style={{ width: 200, height: 200 }} /> */}
-        <TouchableOpacity
-          style={{
-            height: 50,
-            width: 150,
-            backgroundColor: "#fff",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-          onPress={() => this.upload()}
-        >
-          <Text>SIGN UP</Text>
-        </TouchableOpacity>
-      </View>
+      </SafeAreaView>
     );
   }
 }
 
-const style = StyleSheet.create({
-  wrapper: {
-    height: heightWindow / 3,
-    backgroundColor: "#ffffff",
-    margin: 7,
+const mapStateToProps = (state) => {
+  return {
+    reduxState: state,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    product: (id_product) =>
+      dispatch({ type: "id_product", payload: id_product }),
+  }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(SignUp);
+
+const styles = StyleSheet.create({
+  main: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 16,
+  },
+  container: {
+    padding: 15,
+    width: "100%",
+    position: "relative",
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  logo: {
+    height: 130,
+    width: 130,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 20,
+    marginBottom: 16,
+    marginTop: -80,
+  },
+  brandName: {
+    fontSize: 40,
+    textAlign: "center",
+    fontWeight: "bold",
+    color: "#1F41BB",
+    opacity: 0.9,
+    // marginTop: -10,
+  },
+  loginContinueTxt: {
+    fontSize: 21,
+    textAlign: "center",
+    color: "#666666",
+    marginBottom: 16,
+    fontWeight: "bold",
+  },
+  input: {
+    backgroundColor: "#f1f4ff",
+    borderWidth: 1,
+    borderColor: "#ccc",
+    padding: 15,
+    marginVertical: 10,
+    borderRadius: 5,
+    height: 55,
+    paddingVertical: 0,
+  },
+
+  loginBtnWrapper: {
+    height: 55,
+    marginTop: 12,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.4,
+    shadowRadius: 3,
+    elevation: 5,
+  },
+  TakeImageBtn: {
+    backgroundColor: "#AAAAAA",
+    textAlign: "center",
+    justifyContent: "center",
+    alignItems: "center",
+    height: 50,
+    borderRadius: 10,
+    shadowColor: "#1F41BB",
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    marginBottom: 10,
+  },
+  ImageText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+
+  loginBtn: {
+    backgroundColor: "#1F41BB",
+    textAlign: "center",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    height: 55,
+    borderRadius: 10,
+    shadowColor: "#1F41BB",
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+  },
+  loginText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "700",
+  },
+
+  footer: {
+    position: "absolute",
+    bottom: 20,
+    textAlign: "center",
+    flexDirection: "row",
+  },
+  footerText: {
+    color: "#666666",
+    fontWeight: "bold",
+  },
+  signupBtn: {
+    color: "#1F41BB",
+    fontWeight: "bold",
+    textDecorationLine: "underline",
+  },
+
+  wFull: {
+    width: "100%",
+  },
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 24,
   },
 });

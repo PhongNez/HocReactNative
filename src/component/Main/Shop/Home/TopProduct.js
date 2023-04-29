@@ -23,7 +23,7 @@ class TopProduct extends Component {
       quantity: 0,
       size: 360,
     };
-    global.setArrCart = () => {}; //Khai báo cho có
+    global.setArrCart = () => { }; //Khai báo cho có
     global.setArrSearch = (arrSearch) =>
       this.setState(
         {
@@ -50,7 +50,7 @@ class TopProduct extends Component {
       //let response = await handleGetAllUser('ALL');
       //let response = await handleGetAllUserShop()
       let response = await addCart(token, id_product, 1, this.state.size);
-      let cart = await axios.post("http://192.168.138.6:8081/api/v1/account");
+      let cart = await axios.post("http://192.168.1.10:8081/api/v1/account");
       global.setArrCart(cart.data.list);
       global.setTabBarBadge(cart.data.list.length);
     } catch (e) {
@@ -91,7 +91,7 @@ class TopProduct extends Component {
                   >
                     <Image
                       source={{
-                        uri: `http://192.168.138.6:8081${item.images}`,
+                        uri: `http://192.168.1.10:8081${item.images}`,
                       }}
                       style={{ height: 130, width: 147 }}
                     ></Image>
@@ -122,7 +122,7 @@ class TopProduct extends Component {
         </View>
         {/* <View style={body}>
                     <View style={productContainer}>
-                        <Image source={{ uri: 'http://192.168.138.6:8081/image/image-1676180053712.jpg' }} style={{ height: 200, width: 147 }}></Image>
+                        <Image source={{ uri: 'http://192.168.1.10:8081/image/image-1676180053712.jpg' }} style={{ height: 200, width: 147 }}></Image>
                         <Text>Product name</Text>
 
                         <TouchableOpacity onPress={() => this.handleAddGioHang()}>

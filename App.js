@@ -9,11 +9,15 @@ import ChangeInfo from './src/component/ChangeInfo/ChangeInfo'
 import { NavigationContainer } from '@react-navigation/native';
 import OrderHistory from './src/component/OrderHistory/OrderHistory';
 import DetailProduct from './src/component/DetailProduct/DetailProduct';
+import Header from './src/component/Main/Shop/Header';
+import Cart from './src/component/Main/Shop/Cart/Cart';
+import SignUp from './src/component/Authentication/SignUp';
 
 import { Provider } from 'react-redux'
 import { createStore } from 'redux'
 
 import rootReducer from './src/store/rootReducer';
+import SignIn from './src/component/Authentication/SignIn';
 const reduxStore = createStore(
   rootReducer
 );
@@ -32,6 +36,10 @@ export default class App extends Component {
             <Stack.Screen name="ORDER_HISTORY" component={OrderHistory} />
             <Stack.Screen name="AUTHENTICATION" component={Authentication} />
             <Stack.Screen name="DETAIL_PRODUCT" component={DetailProduct} />
+            <Stack.Screen name="HEADER" component={Header} />
+            <Stack.Screen name="CART" component={Cart} />
+            <Stack.Screen name="SIGN_UP" component={SignUp} />
+            <Stack.Screen name="SIGN_IN" component={SignIn} />
           </Stack.Navigator>
         </NavigationContainer>
       </Provider>
