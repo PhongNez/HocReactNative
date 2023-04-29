@@ -36,7 +36,7 @@ export default class Header extends Component {
   onSearch = async () => {
     //console.log('Phong');
     let data = { name: 1 };
-    let res = await axios.post("http://192.168.1.10:8081/api/v1/search", {
+    let res = await axios.post("http://192.168.134.6:8081/api/v1/search", {
       name: this.state.textSearch,
     });
     console.log("Search: ", res.data);
@@ -50,30 +50,7 @@ export default class Header extends Component {
     return (
       <View style={wrapper}>
         <View style={row1}>
-          <TouchableOpacity
-            style={{
-              borderRadius: 10,
-              overflow: "hidden",
-              width: 10 * 5,
-              height: 10 * 5,
-            }}
-            onPress={() => this.onpenMenu()}
-          >
-            {/* <Image source={icMenu} style={iconStyle}></Image> */}
-            <BlurView
-              style={{
-                height: "100%",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Ionicons
-                name="menu"
-                size={10 * 3}
-                color={colors["white-smoke"]}
-              />
-            </BlurView>
-          </TouchableOpacity>
+
           <Text style={textStyle}>Coffe Happy</Text>
           {/* <Image source={icLogo} style={iconStyle}></Image> */}
           <BlurView

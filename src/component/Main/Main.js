@@ -33,10 +33,10 @@ export default class Main extends Component {
 
         return (
             <Drawer
-                ref={(ref) => this.drawer = ref}
-                content={<Menu navigation={navigation} />}
-                openDrawerOffset={0.5}//mở menu 0.4 màn hình
-                tapToClose={true}//bấm để ẩn menu
+            // ref={(ref) => this.drawer = ref}
+            // content={<Menu navigation={navigation} />}
+            // openDrawerOffset={0.5}//mở menu 0.4 màn hình
+            // tapToClose={true}//bấm để ẩn menu
             >
                 {/* Home
                 Cart

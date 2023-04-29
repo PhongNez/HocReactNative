@@ -111,7 +111,7 @@ class Menu extends Component {
     return (
       <View style={container}>
         <Image
-          source={{ uri: `http://192.168.1.10:8081/image/${image}` }}
+          source={{ uri: `http://192.168.134.6:8081/image/${image}` }}
           style={profile}
         />
 

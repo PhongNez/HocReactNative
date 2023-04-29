@@ -56,7 +56,7 @@ class DetailProduct extends Component {
   async componentDidMount() {
     // console.log("this.state.id_product", this.props.reduxState.id_product);
     let response = await axios.get(
-      `http://192.168.1.10:8081/api/v1/chiTiet?id=${this.props.reduxState.id_product}`
+      `http://192.168.134.6:8081/api/v1/chiTiet?id=${this.props.reduxState.id_product}`
     );
     console.log("Chi tiết sản phẩm:", response.data);
     this.setState({
@@ -84,7 +84,7 @@ class DetailProduct extends Component {
       if (this.state.quantity > 0) {
         console.log(id_product, this.state.size, this.state.quantity);
         let response = await addCart(token, id_product, this.state.quantity, this.state.size);
-        let cart = await axios.post("http://192.168.1.10:8081/api/v1/account");
+        let cart = await axios.post("http://192.168.134.6:8081/api/v1/account");
         console.log('Cart new: ', cart.data);
         // global.setArrCart(cart.data.list);
         this.props.arrGioHang(cart.data.list); //redux arr Gio Hang
@@ -127,7 +127,7 @@ class DetailProduct extends Component {
               <SafeAreaView>
                 <ImageBackground
                   source={{
-                    uri: `http://192.168.1.10:8081/image/${listProduct[0].images}`,
+                    uri: `http://192.168.134.6:8081/image/${listProduct[0].images}`,
                   }}
                   style={styles.imgbg}
                   imageStyle={{

@@ -81,7 +81,7 @@ class Cart extends Component {
     let token = await getToken();
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     global.setTabBarBadge(this.props.reduxState.arrGioHang.length);
-    let cart = await axios.post("http://192.168.1.10:8081/api/v1/account");
+    let cart = await axios.post("http://192.168.134.6:8081/api/v1/account");
     console.log(cart.data);
     this.props.arrGioHang(cart.data.list)
   }
@@ -90,7 +90,7 @@ class Cart extends Component {
     let token = await getToken();
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     let response = await axios.post(
-      "http://192.168.1.10:8081/api/v1/product/2"
+      "http://192.168.134.6:8081/api/v1/product/2"
     );
     console.log("Check token add cart:", response);
   };
@@ -101,13 +101,13 @@ class Cart extends Component {
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     //let response = await handleGetAllUser('ALL');
     //let response = await handleGetAllUserShop()
-    // let response = await axios.get('http://192.168.1.10:8081/api/v1/admin/account')
+    // let response = await axios.get('http://192.168.134.6:8081/api/v1/admin/account')
     console.log("Size: ", size);
     let response = await axios.delete(
-      `http://192.168.1.10:8081/api/v1/product/${id_product}`, { data: { size } }
+      `http://192.168.134.6:8081/api/v1/product/${id_product}`, { data: { size } }
     );
     console.log(response);
-    let cart = await axios.post("http://192.168.1.10:8081/api/v1/account");
+    let cart = await axios.post("http://192.168.134.6:8081/api/v1/account");
     console.log("CArt", cart.data);
     if (cart && cart.data && cart.data.list) {
       // global.setArrCart(cart.data.list);
@@ -133,9 +133,9 @@ class Cart extends Component {
 
 
     let response = await axios.put(
-      `http://192.168.1.10:8081/api/v1/account/tangSoLuongCart/${id_product}`, { data: { quantity: quantity1, size: size1 } }
+      `http://192.168.134.6:8081/api/v1/account/tangSoLuongCart/${id_product}`, { data: { quantity: quantity1, size: size1 } }
     );
-    let cart = await axios.post("http://192.168.1.10:8081/api/v1/account");
+    let cart = await axios.post("http://192.168.134.6:8081/api/v1/account");
     this.props.arrGioHang(cart.data.list)
     console.log(response);
   };
@@ -144,9 +144,9 @@ class Cart extends Component {
     console.log(quantity1, size1);
     if (quantity1 > 1) {
       let response = await axios.put(
-        `http://192.168.1.10:8081/api/v1/account/giamSoLuongCart/${id_product}`, { data: { quantity: quantity1, size: size1 } }
+        `http://192.168.134.6:8081/api/v1/account/giamSoLuongCart/${id_product}`, { data: { quantity: quantity1, size: size1 } }
       );
-      let cart = await axios.post("http://192.168.1.10:8081/api/v1/account");
+      let cart = await axios.post("http://192.168.134.6:8081/api/v1/account");
       this.props.arrGioHang(cart.data.list)
       console.log(response);
     }
@@ -155,14 +155,14 @@ class Cart extends Component {
   xemDon = async () => {
     let token = await getToken();
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    let response = await axios.get(`http://192.168.1.10:8081/api/v1/order`);
+    let response = await axios.get(`http://192.168.134.6:8081/api/v1/order`);
     console.log(response.data);
   };
 
   datHang = async () => {
     let token = await getToken();
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    let response = await axios.post(`http://192.168.1.10:8081/api/v1/pay`);
+    let response = await axios.post(`http://192.168.134.6:8081/api/v1/pay`);
     console.log(response.data);
   };
 
@@ -225,7 +225,7 @@ class Cart extends Component {
 
           renderItem={({ item, index }) => (
             // <Image
-            //   source={{ uri: `http://192.168.1.10:8081/${item.images}` }}
+            //   source={{ uri: `http://192.168.134.6:8081/${item.images}` }}
             //   style={{ height: 60, width: 60, alignItems: "center" }}
             // ></Image>
 
@@ -269,7 +269,7 @@ class Cart extends Component {
                 <Image
                   // source={ImageCoffee}
                   source={{
-                    uri: `http://192.168.1.10:8081/image/${item.images}`,
+                    uri: `http://192.168.134.6:8081/image/${item.images}`,
                   }}
 
                   style={{
