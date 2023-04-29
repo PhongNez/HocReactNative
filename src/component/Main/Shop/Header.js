@@ -36,7 +36,7 @@ export default class Header extends Component {
   onSearch = async () => {
     //console.log('Phong');
     let data = { name: 1 };
-    let res = await axios.post("http://192.168.134.6:8081/api/v1/search", {
+    let res = await axios.post("http://192.168.134.135:8081/api/v1/search", {
       name: this.state.textSearch,
     });
     console.log("Search: ", res.data);

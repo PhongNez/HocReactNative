@@ -56,7 +56,7 @@ class Store extends Component {
     });
 
     let listCategory = await axios.get(
-      "http://192.168.134.6:8081/api/v1/category?id=ALL"
+      "http://192.168.134.135:8081/api/v1/category?id=ALL"
     );
     console.log("Tan: ", listCategory.data.listCategory);
     this.setState({
@@ -73,7 +73,7 @@ class Store extends Component {
       //let response = await handleGetAllUser('ALL');
       //let response = await handleGetAllUserShop()
       let response = await addCart(token, id_product, 1);
-      let cart = await axios.post("http://192.168.134.6:8081/api/v1/account");
+      let cart = await axios.post("http://192.168.134.135:8081/api/v1/account");
       global.setArrCart(cart.data.list);
       global.setTabBarBadge(cart.data.list.length);
     } catch (e) {
@@ -92,7 +92,7 @@ class Store extends Component {
   onClickTrangThai = async (trangthai, id_category) => {
     console.log(id_category);
     let arrProduct = await axios.get(
-      `http://192.168.134.6:8081/api/v1/admin/product?id=${id_category}`
+      `http://192.168.134.135:8081/api/v1/admin/product?id=${id_category}`
     );
     console.log("id_category:", arrProduct.data.listProduct);
     this.setState({
@@ -146,12 +146,12 @@ class Store extends Component {
                         {/* <Image
                         style={styles.img}
                         source={{
-                          uri: `http://192.168.134.6:8081${item.images}`,
+                          uri: `http://192.168.134.135:8081${item.images}`,
                         }}
                       ></Image> */}
                         <Image
                           source={{
-                            uri: `http://192.168.134.6:8081/image/${item.images}`,
+                            uri: `http://192.168.134.135:8081/image/${item.images}`,
                           }}
                           style={styles.img}
                         />
