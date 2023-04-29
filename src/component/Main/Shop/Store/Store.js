@@ -14,6 +14,7 @@ import {
   Dimensions,
   FlatList,
 } from "react-native";
+// require("intl/locale-data/jsonp/vi-VN");
 import sp1 from "../../../../public/temp/sp1.jpeg";
 import { addCart, getProduct } from "../../../api/userServices";
 import getToken from "../../../../global/getToken";
@@ -56,7 +57,7 @@ class Store extends Component {
     });
 
     let listCategory = await axios.get(
-      "http://192.168.138.6:8081/api/v1/category?id=ALL"
+      "http://192.168.134.6:8081/api/v1/category?id=ALL"
     );
     console.log("Tan: ", listCategory.data.listCategory);
     this.setState({
@@ -64,7 +65,6 @@ class Store extends Component {
     });
     console.log("Danh sach san pham", response);
   }
-  
 
   handleAddGioHang = async (id_product) => {
     try {
@@ -73,7 +73,7 @@ class Store extends Component {
       //let response = await handleGetAllUser('ALL');
       //let response = await handleGetAllUserShop()
       let response = await addCart(token, id_product, 1);
-      let cart = await axios.post("http://192.168.138.6:8081/api/v1/account");
+      let cart = await axios.post("http://192.168.134.6:8081/api/v1/account");
       global.setArrCart(cart.data.list);
       global.setTabBarBadge(cart.data.list.length);
     } catch (e) {
@@ -91,7 +91,7 @@ class Store extends Component {
   onClickTrangThai = async (trangthai, id_category) => {
     console.log(id_category);
     let arrProduct = await axios.get(
-      `http://192.168.138.6:8081/api/v1/admin/product?id=${id_category}`
+      `http://192.168.134.6:8081/api/v1/admin/product?id=${id_category}`
     );
     console.log("id_category:", arrProduct.data.listProduct);
     this.setState({
@@ -102,10 +102,11 @@ class Store extends Component {
   render() {
     let listCategory = this.state.listCategory;
     let arrProduct = this.state.arr;
+    const a = 9000000;
     console.log("Xem thử:", arrProduct);
     return (
       <>
-        <View style={{backgroundColor:"#000"}}>
+        <View style={{ backgroundColor: "#000" }}>
           <Text style={styles.title}>Danh mục sản phẩm</Text>
           {/* Danh Mục */}
           <FlatList
@@ -145,12 +146,12 @@ class Store extends Component {
                         {/* <Image
                         style={styles.img}
                         source={{
-                          uri: `http://192.168.138.6:8081${item.images}`,
+                          uri: `http://192.168.134.6:8081${item.images}`,
                         }}
                       ></Image> */}
                         <Image
                           source={{
-                            uri: `http://192.168.138.6:8081/image/${item.images}`,
+                            uri: `http://192.168.134.6:8081/image/${item.images}`,
                           }}
                           style={styles.img}
                         />
@@ -163,7 +164,13 @@ class Store extends Component {
                       </Text>
                       <View style={styles.infoview}>
                         <View style={styles.priceview}>
-                          <Text style={styles.pricetext}>{item.price} VND</Text>
+                          <Text style={{ color: "white" }}>
+                            {/* {`${new Intl.NumberFormat("vi-VN", {
+                              style: "currency",
+                              currency: "VND",
+                            }).format(Number(item.price))}`} */}
+                            {item.price} VND
+                          </Text>
                           {/* <TextInput
                         value={this.state.quantity}
                         onChangeText={(text) =>
@@ -208,8 +215,6 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-
-
 export default connect(mapStateToProps, mapDispatchToProps)(Store);
 
 const styles = StyleSheet.create({
@@ -231,8 +236,8 @@ const styles = StyleSheet.create({
   },
   item: {
     margin: 14,
-    marginBottom:-2,
-    marginTop:-2,
+    marginBottom: -2,
+    marginTop: -2,
     display: "flex",
     flexDirection: "row",
     justifyContent: "center",

@@ -18,6 +18,7 @@ import colors from "..//Store/colors";
 import { BlurView } from "expo-blur";
 import { CheckBox } from "react-native-elements";
 import { MaterialIcons } from "@expo/vector-icons";
+import ImageCoffee from "..//Store/coffees/nathan-dumlao-ikU3J1nr52w-unsplash.jpg";
 const { height, width } = Dimensions.get("window");
 
 export default class Cart extends Component {
@@ -32,14 +33,13 @@ export default class Cart extends Component {
     this.toggleCheckbox = this.toggleCheckbox.bind(this);
     this.handlePress = this.handlePress.bind(this);
 
-    
     global.setArrCart = (listCart) =>
       this.setState(
         { listCart: listCart },
         console.log("List cart day ne:", listCart)
       );
   }
-  
+
   toggleCheckbox(id_product) {
     this.setState({ isChecked: !this.state.isChecked });
   }
@@ -59,7 +59,7 @@ export default class Cart extends Component {
     }
     // let token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF9hY2NvdW50IjoxLCJlbWFpbCI6ImFkbWluLmZvb2RvcmRlckBnbWFpbC5jb20iLCJwaG9uZSI6IjAzMjEiLCJuYW1lIjoiS2ltIMSQ4bqhaSBQaG9uZyIsImNyZWF0ZWRfdGltZSI6IjIwMjItMDktMjFUMDU6MTI6MjYuMDAwWiIsImFkZHJlc3MiOiI1MiIsImF2YXRhciI6IicnIiwic3RhdHVzIjowLCJyb2xlIjoxLCJpYXQiOjE2Nzc3NDIzMjZ9.cVxNo4bTJq2zKQomgAlFFKHbfjCZ9y5Vm4zmcavUC3k'
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    let cart = await axios.post("http://192.168.138.6:8081/api/v1/account");
+    let cart = await axios.post("http://192.168.134.6:8081/api/v1/account");
     this.setState({ listCart: cart.data.list });
     global.setArrCart(cart.data.list);
     global.setTabBarBadge(cart.data.list.length);
@@ -71,9 +71,9 @@ export default class Cart extends Component {
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     //let response = await handleGetAllUser('ALL');
     //let response = await handleGetAllUserShop()
-    // let response = await axios.get('http://192.168.138.6:8081/api/v1/admin/account')
+    // let response = await axios.get('http://192.168.134.6:8081/api/v1/admin/account')
     let response = await axios.post(
-      "http://192.168.138.6:8081/api/v1/product/2"
+      "http://192.168.134.6:8081/api/v1/product/2"
     );
     console.log("Check token add cart:", response);
   };
@@ -84,12 +84,12 @@ export default class Cart extends Component {
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     //let response = await handleGetAllUser('ALL');
     //let response = await handleGetAllUserShop()
-    // let response = await axios.get('http://192.168.138.6:8081/api/v1/admin/account')
+    // let response = await axios.get('http://192.168.134.6:8081/api/v1/admin/account')
     let response = await axios.delete(
-      `http://192.168.138.6:8081/api/v1/product/${id_product}`
+      `http://192.168.134.6:8081/api/v1/product/${id_product}`
     );
     console.log(response);
-    let cart = await axios.post("http://192.168.138.6:8081/api/v1/account");
+    let cart = await axios.post("http://192.168.134.6:8081/api/v1/account");
     console.log("CArt", cart.data);
     if (cart && cart.data && cart.data.list) {
       global.setArrCart(cart.data.list);
@@ -119,17 +119,16 @@ export default class Cart extends Component {
   xemDon = async () => {
     let token = await getToken();
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    let response = await axios.get(`http://192.168.138.6:8081/api/v1/order`);
+    let response = await axios.get(`http://192.168.134.6:8081/api/v1/order`);
     console.log(response.data);
   };
 
   datHang = async () => {
     let token = await getToken();
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    let response = await axios.post(`http://192.168.138.6:8081/api/v1/pay`);
+    let response = await axios.post(`http://192.168.134.6:8081/api/v1/pay`);
     console.log(response.data);
   };
-
 
   render() {
     const listCart = this.state.listCart;
@@ -155,17 +154,24 @@ export default class Cart extends Component {
             bottom: 15,
           }}
         >
-          <Text style={{ color: "#fff", fontSize: 24, fontWeight: "600",marginTop:10 }}>
+          <Text
+            style={{
+              color: "#fff",
+              fontSize: 24,
+              fontWeight: "600",
+              marginTop: 10,
+            }}
+          >
             Giỏ hàng của bạn
           </Text>
         </View>
 
-        <FlatList style={{marginTop:-16,}}
+        <FlatList
+          style={{ marginTop: -16 }}
           data={listCart}
-
           renderItem={({ item }) => (
             // <Image
-            //   source={{ uri: `http://192.168.138.6:8081/${item.images}` }}
+            //   source={{ uri: `http://192.168.134.6:8081/${item.images}` }}
             //   style={{ height: 60, width: 60, alignItems: "center" }}
             // ></Image>
 
@@ -206,23 +212,21 @@ export default class Cart extends Component {
               <TouchableOpacity>
                 <Image
                   // source={ImageCoffee}
-                  source={{
-                    uri: `http://192.168.138.6:8081/image/${item.images}`,
-                  }}
-                  
+                  // source={{
+                  //   uri: `http://192.168.134.6:8081/image/${item.images}`,
+                  // }}
                   style={{
                     height: 80,
                     width: 80,
                     borderRadius: 10,
                     position: "relative",
                     top: 20,
-                    // left: 2,
                     marginRight: 5,
                   }}
                 />
               </TouchableOpacity>
 
-              <View style={{ padding: 14 }}>
+              <View style={{ padding: -16 }}>
                 <Text
                   style={{
                     fontSize: 18,
@@ -242,6 +246,16 @@ export default class Cart extends Component {
                   }}
                 >
                   {item.price} VNĐ
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 15,
+                    fontWeight: "500",
+                    color: "#fff",
+                    marginBottom: 12,
+                  }}
+                >
+                  Size:{item.size}
                 </Text>
                 <View style={styles.container}>
                   <TouchableOpacity
@@ -276,7 +290,9 @@ export default class Cart extends Component {
           keyExtractor={(item) => item.id}
         />
         <SafeAreaView style={styles.safefoot}>
-          <View style={{ flexDirection: "row",marginLeft:-10,marginTop:10, }}>
+          <View
+            style={{ flexDirection: "row", marginLeft: -10, marginTop: 10 }}
+          >
             <CheckBox
               // title={` ${this.state.check3 ? "Bỏ" : ""} Tất cả`}
               // checked={this.state.isChecked}
@@ -300,16 +316,28 @@ export default class Cart extends Component {
               Tất cả
             </Text>
           </View>
+          <Text
+            style={{
+              color: "#fff",
+              justifyContent: "center",
+              alignItems: "center",
+              fontSize: 10 * 1.6,
+              fontWeight: "500",
+              marginTop: 24.4,
+            }}
+          >
+            Tổng: 34.000 đ
+          </Text>
 
           <TouchableOpacity
             style={{
-              marginTop:14,
-              marginRight:16,
+              marginTop: 14,
+              marginRight: 16,
               backgroundColor: colors.primary,
               justifyContent: "center",
               alignItems: "center",
               borderRadius: 10 * 1.2,
-              height:44,
+              height: 44,
               width: 130,
             }}
           >
@@ -367,6 +395,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#000",
     flexDirection: "row",
     justifyContent: "space-between",
-    height:70,
+    height: 70,
   },
 });
