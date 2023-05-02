@@ -20,6 +20,7 @@ import { CheckBox } from "react-native-elements";
 import { MaterialIcons } from "@expo/vector-icons";
 const { height, width } = Dimensions.get("window");
 import { connect } from "react-redux";
+import { Swipeable, RectButton } from "react-native-gesture-handler";
 
 class Cart extends Component {
   constructor(props) {
@@ -28,7 +29,7 @@ class Cart extends Component {
       quantity: 1,
       isChecked: false,
       checkALL: false,
-      listCart: []
+      listCart: [],
     };
     this.toggleCheckbox = this.toggleCheckbox.bind(this);
     this.handlePress = this.handlePress.bind(this);
@@ -37,30 +38,36 @@ class Cart extends Component {
   toggleCheckbox(id_product) {
     this.setState({ isChecked: !this.state.isChecked });
   }
+
   handlePress = () => {
     // this.setState((prevState) => ({
     //   checkALL: !prevState.checkALL,
     // }));
     // let listCart = this.state.listCart
-    let copyState = { ...this.state }
+    let copyState = { ...this.state };
     if (this.state.checkALL == false) {
       for (let i = 0; i < this.props.reduxState.arrGioHang.length; i++) {
-        copyState['checked' + i] = true;
+        copyState["checked" + i] = true;
       }
 
-      this.setState({
-        ...copyState,
-        checkALL: true
-      }, () => console.log('Check: ', this.state))
-    }
-    else {
+      this.setState(
+        {
+          ...copyState,
+          checkALL: true,
+        },
+        () => console.log("Check: ", this.state)
+      );
+    } else {
       for (let i = 0; i < this.props.reduxState.arrGioHang.length; i++) {
-        copyState['checked' + i] = false;
+        copyState["checked" + i] = false;
       }
-      this.setState({
-        ...copyState,
-        checkALL: false
-      }, () => console.log('Check: ', this.state))
+      this.setState(
+        {
+          ...copyState,
+          checkALL: false,
+        },
+        () => console.log("Check: ", this.state)
+      );
     }
     // if (!copyState['checked' + index]) {
     //   copyState['checked' + index] = true;
@@ -73,17 +80,16 @@ class Cart extends Component {
     //   listCart.splice(id, 1); // 2nd parameter means remove one item only
     // }
     //}
-
-
-  }
+  };
 
   async componentDidMount() {
+    this.props.history(this.props.navigation);
     let token = await getToken();
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     global.setTabBarBadge(this.props.reduxState.arrGioHang.length);
     let cart = await axios.post("http://192.168.134.6:8081/api/v1/account");
     console.log(cart.data);
-    this.props.arrGioHang(cart.data.list)
+    this.props.arrGioHang(cart.data.list);
   }
 
   addCart = async () => {
@@ -104,7 +110,8 @@ class Cart extends Component {
     // let response = await axios.get('http://192.168.134.6:8081/api/v1/admin/account')
     console.log("Size: ", size);
     let response = await axios.delete(
-      `http://192.168.134.6:8081/api/v1/product/${id_product}`, { data: { size } }
+      `http://192.168.134.6:8081/api/v1/product/${id_product}`,
+      { data: { size } }
     );
     console.log(response);
     let cart = await axios.post("http://192.168.134.6:8081/api/v1/account");
@@ -130,13 +137,12 @@ class Cart extends Component {
   handleIncrement = async (id_product, quantity1, size1) => {
     console.log(quantity1, size1);
 
-
-
     let response = await axios.put(
-      `http://192.168.134.6:8081/api/v1/account/tangSoLuongCart/${id_product}`, { data: { quantity: quantity1, size: size1 } }
+      `http://192.168.134.6:8081/api/v1/account/tangSoLuongCart/${id_product}`,
+      { data: { quantity: quantity1, size: size1 } }
     );
     let cart = await axios.post("http://192.168.134.6:8081/api/v1/account");
-    this.props.arrGioHang(cart.data.list)
+    this.props.arrGioHang(cart.data.list);
     console.log(response);
   };
 
@@ -144,10 +150,11 @@ class Cart extends Component {
     console.log(quantity1, size1);
     if (quantity1 > 1) {
       let response = await axios.put(
-        `http://192.168.134.6:8081/api/v1/account/giamSoLuongCart/${id_product}`, { data: { quantity: quantity1, size: size1 } }
+        `http://192.168.134.6:8081/api/v1/account/giamSoLuongCart/${id_product}`,
+        { data: { quantity: quantity1, size: size1 } }
       );
       let cart = await axios.post("http://192.168.134.6:8081/api/v1/account");
-      this.props.arrGioHang(cart.data.list)
+      this.props.arrGioHang(cart.data.list);
       console.log(response);
     }
   };
@@ -167,14 +174,13 @@ class Cart extends Component {
   };
 
   handleCheckBox = (index, item) => {
-    let listCart = this.state.listCart
-    let copyState = { ...this.state }
-    if (!copyState['checked' + index]) {
-      copyState['checked' + index] = true;
-      listCart.push(item)
-    }
-    else {
-      copyState['checked' + index] = false;
+    let listCart = this.state.listCart;
+    let copyState = { ...this.state };
+    if (!copyState["checked" + index]) {
+      copyState["checked" + index] = true;
+      listCart.push(item);
+    } else {
+      copyState["checked" + index] = false;
       // for (let i = 0; i < listCart.length; i++) {
       //   if (listCart[i] === item) {
       //     listCart.splice[i, 1]
@@ -182,20 +188,24 @@ class Cart extends Component {
       //   }
       // }
       const id = listCart.indexOf(item);
-      if (id > -1) { // only splice array when item is found
+      if (id > -1) {
+        // only splice array when item is found
         listCart.splice(id, 1); // 2nd parameter means remove one item only
       }
     }
 
-    this.setState({
-      ...copyState
-    }, () => console.log('Check: ', this.state))
-  }
+    this.setState(
+      {
+        ...copyState,
+      },
+      () => console.log("Check: ", this.state)
+    );
+  };
 
   render() {
-    let listCart = this.props.reduxState.arrGioHang
+    let listCart = this.props.reduxState.arrGioHang;
     const { quantity } = this.state;
-    console.log('mang: ', this.state.listCart);
+    console.log("mang: ", this.state.listCart);
     // if (user) {
     //     console.log('Cart 2: ',);
     //     console.log('Cart 3: ',);
@@ -203,156 +213,89 @@ class Cart extends Component {
 
     return (
       <View style={{ flex: 1, backgroundColor: "#000" }}>
-        <View
-          style={{
-            width: "100%",
-            height: 60,
-            flexDirection: "row",
-            alignItems: "center",
-            paddingLeft: 20,
-            backgroundColor: "#000",
-            elevation: 1,
-            bottom: 15,
-          }}
-        >
-          <Text style={{ color: "#fff", fontSize: 24, fontWeight: "600", marginTop: 10 }}>
-            Giỏ hàng của bạn
-          </Text>
+        <View style={styles.headedCart}>
+          <Text style={styles.headedName}>Giỏ hàng của bạn</Text>
         </View>
 
-        <FlatList style={{ marginTop: -16, }}
+        <FlatList
+          style={{ marginTop: -16 }}
           data={listCart}
-
           renderItem={({ item, index }) => (
-            // <Image
-            //   source={{ uri: `http://192.168.134.6:8081/${item.images}` }}
-            //   style={{ height: 60, width: 60, alignItems: "center" }}
-            // ></Image>
-
-            <BlurView
-              tint="dark"
-              intensity={95}
-              style={{
-                width: "94%",
-                alignSelf: "center",
-                height: 120,
-                backgroundColor: "#000",
-                borderRadius: 10,
-                elevation: 1,
-                flexDirection: "row",
-                margin: 6,
-                position: "relative",
-                // marginTop:-10,
-              }}
-            >
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  right: 14,
-                  width: 36,
-                }}
-              >
+            <BlurView tint="dark" intensity={95} style={styles.container}>
+              <View style={styles.cartCheckbox}>
                 <CheckBox
                   style={{
                     alignSelf: "flex-start",
                   }}
-                  checked={this.state['checked' + index]}
-
+                  checked={this.state["checked" + index]}
                   onPress={() => this.handleCheckBox(index, item)}
-                // checked={this.state.isChecked}
-                // onPress={()=>this.toggleCheckbox(item.id_product)}
+                  // checked={this.state.isChecked}
+                  // onPress={()=>this.toggleCheckbox(item.id_product)}
                 />
               </View>
 
               <TouchableOpacity>
                 <Image
-                  // source={ImageCoffee}
                   source={{
                     uri: `http://192.168.134.6:8081/image/${item.images}`,
                   }}
-
-                  style={{
-                    height: 80,
-                    width: 80,
-                    borderRadius: 10,
-                    position: "relative",
-                    top: 20,
-                    // left: 2,
-                    marginRight: 5,
-                  }}
+                  style={styles.cartImage}
                 />
               </TouchableOpacity>
 
-              <View style={{ padding: 14 }}>
-                <Text
-                  style={{
-                    fontSize: 18,
-                    fontWeight: "700",
-                    color: "#fff",
-                    marginBottom: 5,
-                  }}
-                >
-                  {item.name}
+              <View style={{ padding: 14.6 }}>
+                <Text style={styles.cartName}>{item.name}</Text>
+                <Text style={styles.cartPrice}>{item.price} VNĐ</Text>
+                <Text style={styles.cartSize}>
+                  Size
+                  <Text style={styles.cartSizeItem}>
+                    : {item.size == 360 ? "S" : item.size == 500 ? "M" : "L"}
+                  </Text>
                 </Text>
-                <Text
-                  style={{
-                    fontSize: 15,
-                    fontWeight: "500",
-                    color: "#fff",
-                    marginBottom: 12,
-                  }}
-                >
-                  {item.price} VNĐ
-                </Text>
-                <Text
-                  style={{
-                    fontSize: 15,
-                    fontWeight: "500",
-                    color: "#fff",
-                    marginBottom: 12,
-                  }}
-                >
-                  Size: {item.size == 360 ? 'S' : item.size == 500 ? 'M' : 'L'}
-                </Text>
-                <View style={styles.container}>
+                <View style={styles.cartQuantilyView}>
                   <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => this.handleDecrement(item.id_product, item.quantity, item.size)}
+                    style={styles.cartQuantilyButton}
+                    onPress={() =>
+                      this.handleDecrement(
+                        item.id_product,
+                        item.quantity,
+                        item.size
+                      )
+                    }
                   >
-                    <Text style={styles.buttonText}>-</Text>
+                    <Text style={styles.cartQuantilyText}>-</Text>
                   </TouchableOpacity>
-                  <Text style={styles.quantity}>{item.quantity}</Text>
-                  {/* <Text style={styles.quantity}> {item.quantity}</Text> */}
+
+                  <Text style={styles.cartQuantily}>{item.quantity}</Text>
+
                   <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => this.handleIncrement(item.id_product, item.quantity, item.size)}
+                    style={styles.cartQuantilyButton}
+                    onPress={() =>
+                      this.handleIncrement(
+                        item.id_product,
+                        item.quantity,
+                        item.size
+                      )
+                    }
                   >
-                    <Text style={styles.buttonText}>+</Text>
+                    <Text style={styles.cartQuantilyText}>+</Text>
                   </TouchableOpacity>
                 </View>
 
                 <TouchableOpacity
                   onPress={() => this.deleteCart(item.id_product, item.size)}
-                  style={{
-                    position: "relative",
-                    left: 200,
-                    bottom: 70,
-                  }}
+                  style={styles.cartDelIcon}
                 >
-                  <MaterialIcons name="delete" size={30} color="#ddd" />
+                  <MaterialIcons name="delete" size={24.4} color="#ddd" />
                 </TouchableOpacity>
               </View>
             </BlurView>
           )}
           keyExtractor={(item) => item.id}
         />
-        <SafeAreaView style={styles.safefoot}>
-          <View style={{ flexDirection: "row", marginLeft: -10, marginTop: 10, }}>
+        <SafeAreaView style={styles.footer}>
+          <View style={styles.footerCheckbox}>
             <CheckBox
-              // title={` ${this.state.checkALL ? "Bỏ" : ""} Tất cả`}
-              // checked={this.state.isChecked}
-              // onPress={this.toggleCheckbox}
               checked={this.state.checkALL}
               onPress={() => this.handlePress()}
               iconType="material-community"
@@ -360,40 +303,15 @@ class Cart extends Component {
               uncheckedIcon="checkbox-blank-outline"
               checkedColor="red"
             />
-            <Text
-              style={{
-                color: "#fff",
-                justifyContent: "center",
-                alignItems: "center",
-                marginLeft: -12,
-                marginTop: 16,
-              }}
-            >
-              Tất cả
-            </Text>
+            <Text style={styles.footerTotalName}>Tất cả</Text>
           </View>
+          <Text style={styles.footerTotal}>Tổng: 100.000 đ</Text>
 
           <TouchableOpacity
-            style={{
-              marginTop: 14,
-              marginRight: 16,
-              backgroundColor: colors.primary,
-              justifyContent: "center",
-              alignItems: "center",
-              borderRadius: 10 * 1.2,
-              height: 44,
-              width: 130,
-            }}
+            style={styles.footerOrder}
+            onPress={() => this.props.reduxState.history.push("ORDER")}
           >
-            <Text
-              style={{
-                color: colors.white,
-                fontSize: 10 * 1.6,
-                fontWeight: "600",
-              }}
-            >
-              Thanh Toán
-            </Text>
+            <Text style={styles.footerOrderName}>Thanh Toán</Text>
           </TouchableOpacity>
         </SafeAreaView>
       </View>
@@ -410,50 +328,151 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     arrGioHang: (arrGioHang) =>
-      dispatch({ type: "arrCart", payload: arrGioHang })
+      dispatch({ type: "arrCart", payload: arrGioHang }),
+    history: (history) => dispatch({ type: "history", payload: history }),
   };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Cart);
 const styles = StyleSheet.create({
+  headedCart: {
+    width: "100%",
+    height: 60,
+    flexDirection: "row",
+    alignItems: "center",
+    paddingLeft: 20,
+    backgroundColor: "#000",
+    elevation: 1,
+    bottom: 15,
+  },
+  headedName: {
+    color: "#fff",
+    fontSize: 24,
+    fontWeight: "600",
+    marginTop: 10,
+  },
   container: {
+    width: "94%",
+    alignSelf: "center",
+    height: 120,
+    backgroundColor: "#000",
+    borderRadius: 10,
+    elevation: 1,
+    flexDirection: "row",
+    margin: 6,
+    position: "relative",
+  },
+  cartCheckboxt: {
+    flexDirection: "row",
+    alignItems: "center",
+    right: 14,
+    width: 36,
+  },
+  cartImage: {
+    height: 80,
+    width: 80,
+    borderRadius: 10,
+    position: "relative",
+    top: 20,
+    marginRight: 5,
+  },
+  cartName: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: "#fff",
+    marginBottom: 6,
+  },
+  cartPrice: {
+    fontSize: 15,
+    fontWeight: "500",
+    color: "#fff",
+    marginBottom: 8,
+  },
+  cartSize: {
+    fontSize: 15,
+    fontWeight: "500",
+    color: "#fff",
+    marginBottom: 12,
+  },
+  cartSizeItem: {
+    color: colors.primary,
+    fontSize: 10 * 1.8,
+    fontWeight: "500",
+  },
+  cartQuantilyView: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    // borderColor: "gray",
-    // backgroundColor: "rgba(255, 255, 255, 0.08)",
     backgroundColor: colors["dark"],
     borderRadius: 8,
-    width: 90,
+    width: 76.6,
     height: 35,
-    borderWidth: 0,
+    left: 158,
+    bottom: 40.8,
   },
-  button: {
+  cartQuantilyButton: {
     backgroundColor: colors.primary,
-    width: 25,
-    height: 25,
+    width: 20,
+    height: 20,
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 8,
   },
-  buttonText: {
-    fontSize: 15,
+  cartQuantilyText: {
+    fontSize: 10,
     color: "white",
     fontWeight: "bold",
     alignItems: "center",
     justifyContent: "center",
   },
-  quantity: {
-    fontSize: 17,
+  cartQuantily: {
+    fontSize: 15,
     fontWeight: "bold",
     color: "white",
-    // fontFamily: 'Rosarivo-Regular',
-    // fontStyle: 'normal'
   },
-  safefoot: {
+  cartDelIcon: {
+    position: "relative",
+    left: 214,
+    bottom: 142,
+  },
+  footer: {
     backgroundColor: "#000",
     flexDirection: "row",
     justifyContent: "space-between",
     height: 70,
+  },
+  footerCheckbox: {
+    flexDirection: "row",
+    marginLeft: -10,
+    marginTop: 10,
+  },
+  footerTotalName: {
+    color: "#fff",
+    justifyContent: "center",
+    alignItems: "center",
+    marginLeft: -12,
+    marginTop: 16,
+  },
+  footerTotal: {
+    color: "#fff",
+    marginLeft: -2,
+    marginTop: 24.8,
+    fontSize: 10 * 1.6,
+    fontWeight: "500",
+  },
+  footerOrder: {
+    marginTop: 14,
+    marginRight: 16,
+    backgroundColor: colors.primary,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 10 * 1.2,
+    height: 44,
+    width: 130,
+  },
+  footerOrderName: {
+    color: colors.white,
+    fontSize: 10 * 1.6,
+    fontWeight: "600",
   },
 });

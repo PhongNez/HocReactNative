@@ -18,6 +18,7 @@ import { createStore } from 'redux'
 
 import rootReducer from './src/store/rootReducer';
 import SignIn from './src/component/Authentication/SignIn';
+import Order from './src/component/Main/Shop/Cart/Order';
 const reduxStore = createStore(
   rootReducer
 );
@@ -40,6 +41,7 @@ export default class App extends Component {
             <Stack.Screen name="CART" component={Cart} />
             <Stack.Screen name="SIGN_UP" component={SignUp} />
             <Stack.Screen name="SIGN_IN" component={SignIn} />
+            <Stack.Screen name="ORDER" component={Order} />
           </Stack.Navigator>
         </NavigationContainer>
       </Provider>

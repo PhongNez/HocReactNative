@@ -10,6 +10,8 @@ class Home extends Component {
     super(props);
   }
 
+  
+
   render() {
     let { navigation } = this.props;
     console.log("Hello");
@@ -34,6 +36,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     product: (id_product) =>
       dispatch({ type: "id_product", payload: id_product }),
+      history: (history) =>
+      dispatch({ type: "id_product", payload: history })
   };
 };
 
