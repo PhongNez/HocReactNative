@@ -12,8 +12,8 @@ export default class Header extends Component {
               <Ionicons name="ios-cafe-sharp" size={10 * 3} color="#ccc" />
             </BlurView>
           </TouchableOpacity>
-          <Text style={styles.textStyle}>不 安 的 咖 啡</Text>
-          {/* <Text style={styles.textStyle}>Cafe Happy</Text> */}
+          {/* <Text style={styles.textStyle}>不 安 的 咖 啡</Text> */}
+          <Text style={styles.textStyle}>Cafe Bất Ổn</Text>
           {/* <Image source={icLogo} style={iconStyle}></Image> */}
           <BlurView style={styles.homeIconView}>
             <FontAwesome5 name="smile" color="#ccc" size={10 * 2.6} />

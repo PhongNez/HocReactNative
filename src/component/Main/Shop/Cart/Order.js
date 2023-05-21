@@ -101,15 +101,16 @@ class Order extends Component {
             <BlurView tint="dark" intensity={100} style={styles.deliveryView}>
               <FontAwesome5 name="truck" size={20} color={colors.primary} />
               <Text style={styles.deliveryName}>
-                {/* Giao hàng tận nơi: 20000 đ */}交 货: 20000 越 南 盾
+                Giao hàng tận nơi: 20000 đ
+                {/* Giao hàng tận nơi: 20000 đ交 货: 20000 越 南 盾 */}
               </Text>
               <Text style={styles.deliveryText}>
-                {/* Thời gian giao hàng từ 30-60 phút tùy thuộc vào thời điểm và
-                khoảng cách. Nếu có sự chậm trễ mong quý khách thông cảm. Tiệm Cafe
-                Bất Ổn xin chân thành cảm ơn! */}
-                交 货 时 间 为 30-60 分 钟，具 体 取 决 于 时 间 和 距 离。如 有
+                Thời gian giao hàng từ 30-60 phút tùy thuộc vào thời điểm và
+                khoảng cách. Nếu có sự chậm trễ mong quý khách thông cảm. Tiệm
+                Cafe Bất Ổn xin chân thành cảm ơn!
+                {/* 交 货 时 间 为 30-60 分 钟，具 体 取 决 于 时 间 和 距 离。如 有
                 延 误，敬 请 谅 解。不 安 的 咖 啡 对 不 起 谢 谢 感 谢 您 在 我
-                们 的 商 店 购 物
+                们 的 商 店 购 物 */}
               </Text>
             </BlurView>
           </View>
