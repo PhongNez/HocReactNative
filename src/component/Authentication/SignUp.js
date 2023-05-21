@@ -8,16 +8,17 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Image,
-  Button,
+  ScrollView,
+  ToastAndroid,
 } from "react-native";
-
-import { connect } from "react-redux";
 
 const heightWindow = Dimensions.get("window").height;
 // import ImagePicker from 'react-native-image-picker'
 import { launchCamera, launchImageLibrary } from "react-native-image-picker";
 import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
+import { connect } from "react-redux";
+import { MaterialIcons, Ionicons } from "@expo/vector-icons";
 
 class SignUp extends Component {
   constructor(props) {
@@ -96,10 +97,10 @@ class SignUp extends Component {
     fd.append("name", name);
 
     console.log(fd);
-    // let response = await axios.post('http://192.168.138.6:8081/api/v1/admin/createcategory', fd)
+    // let response = await axios.post('http://192.168.63.6:8081/api/v1/admin/createcategory', fd)
 
     // let response = await axios({
-    //     url: "http://192.168.138.6:8081/api/v1/admin/createcategory",
+    //     url: "http://192.168.63.6:8081/api/v1/admin/createcategory",
     //     method: 'POST',
     //     data: fd,
     //     headers: {
@@ -110,7 +111,7 @@ class SignUp extends Component {
     // })
 
     let response = await axios({
-      url: "http://192.168.138.6:8081/api/v1/account/signup",
+      url: "http://192.168.63.6:8081/api/v1/account/signup",
       method: "POST",
       data: fd,
       headers: {
@@ -118,9 +119,28 @@ class SignUp extends Component {
         "Content-Type": "multipart/form-data",
       },
     });
-    console.log(response);
+    ToastAndroid.show("Đăng ký thành công", ToastAndroid.LONG);
+    // console.log(response);
+
+    this.setState({
+      email: "",
+      phone: "",
+      name: "",
+      address: "",
+      avatar: "",
+      password: "",
+      image: null,
+      setImage: null,
+    });
   };
 
+  quayLai = () => {
+    this.props.navigation.goBack();
+  };
+
+  goBackHome = () => {
+    this.props.navigation.popToTop();
+  };
   // quayLai = async () => {
   //   await AsyncStorage.removeItem("@token");
   //   this.props.navigation.goBack();
@@ -132,16 +152,27 @@ class SignUp extends Component {
       this.state;
     console.log(this.state.setImage);
     console.log(this.state.image);
-    console.log('TRang dang ky: ', this.props.reduxState);
+    console.log(this.props);
     return (
       <SafeAreaView style={styles.main}>
+        <View style={styles.goBack}>
+          <TouchableOpacity
+            style={styles.goBack}
+            onPress={() => this.quayLai()}
+          >
+            <MaterialIcons name="chevron-left" color="#000" size={26} />
+            <Text style={styles.backText}>Quay Lại</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.goBackHome}
+            // onPress={() => this.props.reduxState.history.push("MAIN")}
+            onPress={() => this.goBackHome()}
+          >
+            <Ionicons name="home" color="#000" size={26} />
+          </TouchableOpacity>
+        </View>
         <View style={styles.container}>
-          {/* <Image
-            source={{
-              uri: `https://aeonmall-haiphong-lechan.com.vn/wp-content/uploads/2021/01/resize-highlands-1000x625-3.jpg`,
-            }}
-            style={styles.logo}
-          ></Image> */}
           <View style={styles.wFull}>
             <View style={styles.row}>
               <Text style={styles.brandName}>Đăng Ký</Text>
@@ -161,6 +192,7 @@ class SignUp extends Component {
             ></TextInput>
             <TextInput
               style={styles.input}
+              secureTextEntry={true}
               placeholder="Mật Khẩu"
               value={password}
               onChangeText={(text) => this.setState({ password: text })}
@@ -223,7 +255,9 @@ class SignUp extends Component {
 
           <View style={styles.footer}>
             <Text style={styles.footerText}> Bạn Đã Có Tài Khoản? </Text>
-            <TouchableOpacity onPress={() => this.props.reduxState.history.push('SIGN_IN')}>
+            <TouchableOpacity
+              onPress={() => this.props.reduxState.history.push("SIGN_IN")}
+            >
               <Text style={styles.signupBtn}>Đăng Nhập</Text>
             </TouchableOpacity>
           </View>
@@ -243,7 +277,10 @@ const mapDispatchToProps = (dispatch) => {
   return {
     product: (id_product) =>
       dispatch({ type: "id_product", payload: id_product }),
-  }
+    history: (history) => dispatch({ type: "history", payload: history }),
+    arrGioHang: (arrGioHang) =>
+      dispatch({ type: "arrCart", payload: arrGioHang }),
+  };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SignUp);
@@ -251,9 +288,21 @@ export default connect(mapStateToProps, mapDispatchToProps)(SignUp);
 const styles = StyleSheet.create({
   main: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    // justifyContent: "center",
+    // alignItems: "center",
     padding: 16,
+  },
+  goBack: {
+    flexDirection: "row",
+    marginLeft: -4,
+  },
+  backText: {
+    fontSize: 18,
+    marginLeft: -2,
+  },
+  goBackHome: {
+    marginLeft: "66%",
+    marginTop: -6,
   },
   container: {
     padding: 15,
@@ -324,7 +373,7 @@ const styles = StyleSheet.create({
   },
   ImageText: {
     color: "#fff",
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: "600",
   },
 
@@ -343,7 +392,7 @@ const styles = StyleSheet.create({
   loginText: {
     color: "#FFFFFF",
     fontSize: 16,
-    fontWeight: "700",
+    fontWeight: "800",
   },
 
   footer: {

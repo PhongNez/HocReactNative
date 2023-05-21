@@ -36,7 +36,7 @@ class Menu extends Component {
     console.log("token1:", token);
     console.log("token2:", token1);
     this.setState({ user: null });
-    this.props.arrGioHang([])
+    this.props.arrGioHang([]);
     this.props.navigation.dispatch(
       CommonActions.reset({
         index: 1,
@@ -59,7 +59,7 @@ class Menu extends Component {
   };
   gotoAuthentication = () => {
     if (this.props.navigation) {
-      this.props.history(this.props.navigation)
+      this.props.history(this.props.navigation);
     }
     this.props.navigation.push("AUTHENTICATION");
   };
@@ -111,7 +111,7 @@ class Menu extends Component {
     return (
       <View style={container}>
         <Image
-          source={{ uri: `http://192.168.134.135:8081/image/${image}` }}
+          source={{ uri: `http://192.168.63.6:8081/image/${image}` }}
           style={profile}
         />
 
@@ -131,10 +131,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     product: (id_product) =>
       dispatch({ type: "id_product", payload: id_product }),
-    history: (history) =>
-      dispatch({ type: "history", payload: history }),
+    history: (history) => dispatch({ type: "history", payload: history }),
     arrGioHang: (arrGioHang) =>
-      dispatch({ type: "arrCart", payload: arrGioHang })
+      dispatch({ type: "arrCart", payload: arrGioHang }),
   };
 };
 

@@ -10,6 +10,7 @@ import {
   View,
   TouchableOpacity,
   SafeAreaView,
+  ToastAndroid,
 } from "react-native";
 import global from "../../global/global";
 import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
@@ -17,25 +18,22 @@ import { BlurView } from "expo-blur";
 import getToken from "../../global/getToken";
 import { addCart } from "../../component/api/userServices";
 import colors from "../Main/Shop/Store/colors";
-
-import coffee from "../Main/Shop/Store/Coffee";
-const sizes = ["S", "M", "L"];
 const { height, width } = Dimensions.get("window");
-import ImageCoffee from "../Main/Shop/Store/coffees/cafechoi.jpg";
 
 class DetailProduct extends Component {
   constructor(props) {
     super(props);
     this.state = {
       idproduct: "",
-      size: 360,
+      size: 0,
       listProduct: [],
       giaSize: 0,
       trangthai: "",
       quantity: 0,
+      sizeSML: 0,
     };
 
-    global.setArrCart = () => { }; //Khai báo cho có
+    global.setArrCart = () => {}; //Khai báo cho có
     global.setArrSearch = (arrSearch) =>
       this.setState(
         {
@@ -56,7 +54,7 @@ class DetailProduct extends Component {
   async componentDidMount() {
     // console.log("this.state.id_product", this.props.reduxState.id_product);
     let response = await axios.get(
-      `http://192.168.134.135:8081/api/v1/chiTiet?id=${this.props.reduxState.id_product}`
+      `http://192.168.63.6:8081/api/v1/chiTiet?id=${this.props.reduxState.id_product}`
     );
     console.log("Chi tiết sản phẩm:", response.data);
     this.setState({
@@ -78,21 +76,36 @@ class DetailProduct extends Component {
     try {
       let token = await getToken();
       console.log("Token: ", token);
-      let id_product = this.props.reduxState.id_product
+      let id_product = this.props.reduxState.id_product;
       //let response = await handleGetAllUser('ALL');
       //let response = await handleGetAllUserShop()
-      if (this.state.quantity > 0) {
+      // if (this.state.quantity === 0)
+      //   ToastAndroid.show("Vui lòng chọn Số lượng", ToastAndroid.SHORT);
+      if (this.state.size > 0) {
         console.log(id_product, this.state.size, this.state.quantity);
-        let response = await addCart(token, id_product, this.state.quantity, this.state.size);
-        let cart = await axios.post("http://192.168.134.135:8081/api/v1/account");
-        console.log('Cart new: ', cart.data);
-        // global.setArrCart(cart.data.list);
-        this.props.arrGioHang(cart.data.list); //redux arr Gio Hang
-        global.setTabBarBadge(cart.data.list.length);
-      }
+        if (this.state.quantity > 0) {
+          let response = await addCart(
+            token,
+            id_product,
+            this.state.giaSize,
+            this.state.quantity,
+            this.state.size
+          );
+          let cart = await axios.post(
+            "http://192.168.63.6:8081/api/v1/account"
+          );
+          console.log("Cart new: ", cart.data);
+          // global.setArrCart(cart.data.list);
+          this.props.arrGioHang(cart.data.list); //redux arr Gio Hang
+          ToastAndroid.show("Đã thêm vào giỏ hàng", ToastAndroid.SHORT);
+          global.setTabBarBadge(cart.data.list.length);
+        } else {
+          ToastAndroid.show("Vui lòng chọn số lượng", ToastAndroid.SHORT);
+        }
+      } else ToastAndroid.show("Vui lòng chọn size", ToastAndroid.SHORT);
       console.log("hello");
     } catch (e) {
-      console.log(e);
+      console.log(e, "Lỗi rồi cu ơi");
     }
   };
 
@@ -100,20 +113,23 @@ class DetailProduct extends Component {
     this.props.navigation.goBack();
   };
 
-  chonSize = (size, giaSize, trangthai) => {
-    this.setState({
-      size: size,
-      giaSize: giaSize,
-      trangthai: trangthai,
-      state1: 'phong',
-      state2: 'hello'
-    });
-    console.log(this.state.size, this.state.giaSize);
+  chonSize = (size, giaSize, sizeSML, trangthai) => {
+    this.setState(
+      {
+        size: size,
+        giaSize: giaSize,
+        sizeSML: sizeSML,
+        trangthai: trangthai,
+      },
+      console.log(this.state.size, this.state.giaSize)
+    );
   };
 
   render() {
     let listProduct = this.state.listProduct;
-    let giaSize = this.state.giaSize;
+    let giaSize = listProduct && listProduct[0] && listProduct[0].price;
+    let sizeSML = this.state.sizeSML;
+    console.log("Giá size : ", giaSize);
     const quantity = this.state.quantity;
     if (listProduct[0]) {
       console.log(listProduct[0].detail);
@@ -127,7 +143,7 @@ class DetailProduct extends Component {
               <SafeAreaView>
                 <ImageBackground
                   source={{
-                    uri: `http://192.168.134.135:8081/image/${listProduct[0].images}`,
+                    uri: `http://192.168.63.6:8081/image/${listProduct[0].images}`,
                   }}
                   style={styles.imgbg}
                   imageStyle={{
@@ -145,7 +161,10 @@ class DetailProduct extends Component {
                         size={10 * 2.5}
                       />
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttonhd} onPress={() => this.props.navigation.push('CART')}>
+                    <TouchableOpacity
+                      style={styles.buttonhd}
+                      onPress={() => this.props.navigation.push("CART")}
+                    >
                       <Ionicons
                         name="cart"
                         color={colors["white-smoke"]}
@@ -165,7 +184,7 @@ class DetailProduct extends Component {
                           {listProduct[0].name}
                         </Text>
                         <Text style={styles.inclutext}>
-                          {listProduct[0].price + giaSize} VNĐ
+                          {listProduct[0].price + sizeSML} đ
                         </Text>
                       </View>
                     </BlurView>
@@ -191,7 +210,7 @@ class DetailProduct extends Component {
                             ? styles.activeSize
                             : styles.buttonsize
                         }
-                        onPress={() => this.chonSize(360, 0, 1)}
+                        onPress={() => this.chonSize(360, giaSize + 0, 0, 1)}
                       >
                         <Text
                           style={[
@@ -209,7 +228,9 @@ class DetailProduct extends Component {
                             ? styles.activeSize
                             : styles.buttonsize
                         }
-                        onPress={() => this.chonSize(500, 5000, 2)}
+                        onPress={() =>
+                          this.chonSize(500, giaSize + 5000, 5000, 2)
+                        }
                       >
                         <Text
                           style={[
@@ -227,7 +248,9 @@ class DetailProduct extends Component {
                             ? styles.activeSize
                             : styles.buttonsize
                         }
-                        onPress={() => this.chonSize(700, 10000, 3)}
+                        onPress={() =>
+                          this.chonSize(700, giaSize + 10000, 10000, 3)
+                        }
                       >
                         <Text
                           style={[
@@ -263,7 +286,10 @@ class DetailProduct extends Component {
             </ScrollView>
             <SafeAreaView style={styles.safefoot}>
               <View style={styles.cart_view}>
-                <TouchableOpacity style={{ flexDirection: "row" }} onPress={() => this.handleAddGioHang()}>
+                <TouchableOpacity
+                  style={{ flexDirection: "row" }}
+                  onPress={() => this.handleAddGioHang()}
+                >
                   <FontAwesome5
                     name="cart-plus"
                     color={colors["white-smoke"]}
@@ -294,7 +320,7 @@ const mapDispatchToProps = (dispatch) => {
     product: (id_product) =>
       dispatch({ type: "id_product", payload: id_product }),
     arrGioHang: (arrGioHang) =>
-      dispatch({ type: "arrCart", payload: arrGioHang })
+      dispatch({ type: "arrCart", payload: arrGioHang }),
   };
 };
 
@@ -374,7 +400,7 @@ const styles = StyleSheet.create({
     color: colors["white-smoke"],
     fontSize: 10 * 1.7,
     marginTop: 10,
-    marginBottom: 10,
+    marginBottom: 14,
   },
   buttonsize: {
     borderWidth: 2,
@@ -401,19 +427,20 @@ const styles = StyleSheet.create({
     paddingBottom: -24,
   },
   buy_view: {
-    marginRight: 10,
+    marginRight: 12,
     backgroundColor: colors.primary,
-    width: width / 2.15 + 10 * 0.1,
+    width: 160,
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 10 * 2,
-    height: 60,
+    borderRadius: 16,
+    height: 50,
   },
   cart_text: {
     color: colors.white,
     fontSize: 10 * 1.8,
-    fontWeight: '500',
+    fontWeight: "500",
     marginLeft: 6,
+    marginTop: 4,
   },
   buy_text: {
     color: colors.white,

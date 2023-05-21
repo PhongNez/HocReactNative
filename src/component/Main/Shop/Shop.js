@@ -20,6 +20,7 @@ export default class Shop extends Component {
       user: null,
       setTabBarBadge: 0,
     };
+
     global.setTabBarBadge = (setTabBarBadge) =>
       this.setState(
         {
@@ -36,7 +37,7 @@ export default class Shop extends Component {
       );
     };
   }
-  componentDidMount() { }
+  componentDidMount() {}
   onpenMenu = () => {
     this.props.open();
   };
@@ -57,7 +58,7 @@ export default class Shop extends Component {
                         </Text>
                     </TouchableOpacity>
                 </View> */}
-        <Header open={this.onpenMenu} navigation={this.props.navigation} />
+        <Header open={this.onpenMenu} />
         {/* <NavigationContainer> */}
 
         <Tab.Navigator
@@ -65,25 +66,25 @@ export default class Shop extends Component {
             tabBarIcon: ({ focused, color, size }) => {
               let iconName;
 
-              if (route.name === "Home") {
+              if (route.name === "Trang Chủ") {
                 iconName = focused ? "home" : "home";
               } else if (route.name === "Settings") {
                 iconName = focused ? "ios-list" : "ios-list-outline";
               }
 
-              if (route.name === "Store") {
+              if (route.name === "Sản Phẩm") {
                 iconName = focused ? "coffee" : "coffee";
               } else if (route.name === "Settings") {
                 iconName = focused ? "ios-list" : "ios-list-outline";
               }
 
-              if (route.name === "Cart") {
+              if (route.name === "Giỏ Hàng") {
                 iconName = focused ? "shopping-cart" : "shopping-cart";
               } else if (route.name === "Settings") {
                 iconName = focused ? "ios-list" : "ios-list-outline";
               }
 
-              if (route.name === "Trang Cá Nhân") {
+              if (route.name === "Cá Nhân") {
                 iconName = focused ? "user-alt" : "user-alt";
               } else if (route.name === "Settings") {
                 iconName = focused ? "ios-list" : "ios-list-outline";
@@ -94,18 +95,20 @@ export default class Shop extends Component {
               );
             },
             tabBarActiveTintColor: "#945305",
-            tabBarInactiveTintColor: "#000",
+            tabBarInactiveTintColor: "#222222",
             headerShown: false,
+            tabBarInactiveBackgroundColor: "#fff",
+            tabBarActiveBackgroundColor: "#ddd",
           })}
         >
-          <Tab.Screen name="Home" component={Home} />
-          <Tab.Screen name="Store" component={Store} />
+          <Tab.Screen name="Trang Chủ" component={Home} />
+          <Tab.Screen name="Sản Phẩm" component={Store} />
           <Tab.Screen
-            name="Cart"
+            name="Giỏ Hàng"
             component={Cart}
             options={{ tabBarBadge: setTabBarBadge }}
           />
-          <Tab.Screen name="Trang Cá Nhân" component={Contact} />
+          <Tab.Screen name="Cá Nhân" component={Contact} />
         </Tab.Navigator>
         {/* </NavigationContainer> */}
       </View>

@@ -22,11 +22,13 @@ import axios from "axios";
 import { BlurView } from "expo-blur";
 import { Ionicons } from "@expo/vector-icons";
 import ImageCoffee from "./coffees/mainn.jpg";
+import Search from "../Search/Search";
 // import DetailProduct from "../../../DetailProduct/";
 
 // var image = Coffee[0].image;
-const windowHeight = Dimensions.get("window").height;
+// const { height } = Dimensions.get("window").height;
 const { width } = Dimensions.get("window");
+const { height } = Dimensions.get("window");
 class Store extends Component {
   constructor(props) {
     super(props);
@@ -36,7 +38,7 @@ class Store extends Component {
       listCategory: [],
       trangthai: "",
     };
-    global.setArrCart = () => { }; //Khai báo cho có
+    global.setArrCart = () => {}; //Khai báo cho có
     global.setArrSearch = (arrSearch) =>
       this.setState(
         {
@@ -56,7 +58,7 @@ class Store extends Component {
     });
 
     let listCategory = await axios.get(
-      "http://192.168.134.135:8081/api/v1/category?id=ALL"
+      "http://192.168.63.6:8081/api/v1/category?id=ALL"
     );
     console.log("Tan: ", listCategory.data.listCategory);
     this.setState({
@@ -65,7 +67,6 @@ class Store extends Component {
     console.log("Danh sach san pham", response);
   }
 
-
   handleAddGioHang = async (id_product) => {
     try {
       let token = await getToken();
@@ -73,7 +74,7 @@ class Store extends Component {
       //let response = await handleGetAllUser('ALL');
       //let response = await handleGetAllUserShop()
       let response = await addCart(token, id_product, 1);
-      let cart = await axios.post("http://192.168.134.135:8081/api/v1/account");
+      let cart = await axios.post("http://192.168.63.6:8081/api/v1/account");
       global.setArrCart(cart.data.list);
       global.setTabBarBadge(cart.data.list.length);
     } catch (e) {
@@ -84,7 +85,7 @@ class Store extends Component {
   diDenProductDetail = (id_product) => {
     console.log("Detail product:", id_product);
     // global.id_product(id_product);
-    this.props.history(this.props.navigation)
+    this.props.history(this.props.navigation);
     this.props.product(id_product);
     this.props.navigation.push("DETAIL_PRODUCT");
   };
@@ -92,7 +93,7 @@ class Store extends Component {
   onClickTrangThai = async (trangthai, id_category) => {
     console.log(id_category);
     let arrProduct = await axios.get(
-      `http://192.168.134.135:8081/api/v1/admin/product?id=${id_category}`
+      `http://192.168.63.6:8081/api/v1/admin/product?id=${id_category}`
     );
     console.log("id_category:", arrProduct.data.listProduct);
     this.setState({
@@ -100,12 +101,22 @@ class Store extends Component {
       arr: arrProduct.data.listProduct,
     });
   };
+
+  handleTimKiem = (list) => {
+    console.log("hello: ", list);
+    this.setState({
+      arr: list,
+    });
+  };
   render() {
     let listCategory = this.state.listCategory;
     let arrProduct = this.state.arr;
+    console.log("chiều cao là: ", height);
+    console.log("chiều rộng là: ", width);
     console.log("Xem thử:", this.props);
     return (
       <>
+        <Search handleTimKiem={(list) => this.handleTimKiem(list)} />
         <View style={{ backgroundColor: "#000" }}>
           <Text style={styles.title}>Danh mục sản phẩm</Text>
           {/* Danh Mục */}
@@ -143,20 +154,14 @@ class Store extends Component {
                         style={styles.container}
                         onPress={() => this.diDenProductDetail(item.id_product)}
                       >
-                        {/* <Image
-                        style={styles.img}
-                        source={{
-                          uri: `http://192.168.134.135:8081${item.images}`,
-                        }}
-                      ></Image> */}
                         <Image
                           source={{
-                            uri: `http://192.168.134.135:8081/image/${item.images}`,
+                            uri: `http://192.168.63.6:8081/image/${item.images}`,
                           }}
                           style={styles.img}
                         />
                       </TouchableOpacity>
-                      <Text numberOfLines={2} style={styles.nametext}>
+                      <Text numberOfLines={1} style={styles.nametext}>
                         {item.name_product}
                       </Text>
                       <Text numberOfLines={1} style={styles.includedtext}>
@@ -164,14 +169,7 @@ class Store extends Component {
                       </Text>
                       <View style={styles.infoview}>
                         <View style={styles.priceview}>
-                          <Text style={styles.pricetext}>{item.price} VND</Text>
-                          {/* <TextInput
-                        value={this.state.quantity}
-                        onChangeText={(text) =>
-                          this.setState({ quantity: text })
-                        }
-                      /> */}
-                          {/* <Button title="+" onPress={text => this.setState({ quantity: this.state.quantity + 1 })}></Button> */}
+                          <Text style={styles.pricetext}>{item.price} đ</Text>
                         </View>
                         <TouchableOpacity
                           style={styles.add}
@@ -206,12 +204,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     product: (id_product) =>
       dispatch({ type: "id_product", payload: id_product }),
-    history: (history) =>
-      dispatch({ type: "history", payload: history })
+    history: (history) => dispatch({ type: "history", payload: history }),
   };
 };
-
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(Store);
 
@@ -231,6 +226,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     marginBottom: 10,
     marginLeft: 14,
+    marginTop: 16,
   },
   item: {
     margin: 14,
@@ -299,87 +295,3 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
 });
-
-// const styles = StyleSheet.create({
-
-//     viewContent: {
-//         backgroundColor:"#000",
-//         padding:10,
-//     },
-//     bodyview: {
-//       flexDirection: "row",
-//       flexWrap: "wrap",
-//       justifyContent: "space-between",
-//       backgroundColor:"#000"
-//     },
-//     product: {
-//       width: width / 2 - 10 * 2,
-//       marginBottom: 10,
-//       borderRadius: 10 * 2,
-//       overflow: "hidden",
-//     },
-//     pad: {
-//       padding: 10,
-//     },
-//     container: {
-//       height: 150,
-//       width: "100%",
-//     },
-//     img: {
-//       width: "100%",
-//       height: "100%",
-//       borderRadius: 10 * 2,
-//     },
-//     rate: {
-//       position: "absolute",
-//       right: 0,
-//       borderBottomStartRadius: 10 * 3,
-//       borderTopEndRadius: 10 * 2,
-//       overflow: "hidden",
-//     },
-//     rateblurview: {
-//       flexDirection: "row",
-//       padding: 10 - 2,
-//     },
-//     rateicon: {
-//       marginLeft: 10 / 2,
-//     },
-//     ratetext: {
-//       color: colors.white,
-//       marginLeft: 10 / 2,
-//     },
-//     nametext: {
-//       color: colors.white,
-//       fontWeight: "600",
-//       fontSize: 10 * 1.7,
-//       marginTop: 10,
-//       marginBottom: 10 / 2,
-//     },
-//     includedtext: {
-//       color: colors.secondary,
-//       fontSize: 10 * 1.2,
-//     },
-//     infoview: {
-//       marginVertical: 10 / 2,
-//       flexDirection: "row",
-//       justifyContent: "space-between",
-//       alignItems: "center",
-//     },
-//     priceview: {
-//       flexDirection: "row",
-//     },
-//     priceicon: {
-//       color: colors.primary,
-//       marginRight: 10 / 2,
-//       fontSize: 10 * 1.6,
-//     },
-//     pricetext: {
-//       color: colors.white,
-//       fontSize: 10 * 1.6,
-//     },
-//     add: {
-//       backgroundColor: colors.primary,
-//       padding: 10 / 2,
-//       borderRadius: 10,
-//     },
-//   });
